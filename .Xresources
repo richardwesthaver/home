@@ -1,0 +1,33 @@
+URxvt.background:	#141c21
+URxvt.foreground:	#93a1a1
+*.cursorColor: #afbfbf
+*.color0: #263640
+*.color8: #4a697d
+*.color1: #d12f2c
+*.color9: #fa3935
+*.color2: #819400
+*.color10: #a4bd00
+*.color3: #b08500
+*.color11: #d9a400
+*.color4: #2587cc
+*.color12: #2ca2f5
+*.color5: #696ebf
+*.color13: #8086e8
+*.color6: #289c93
+*.color14: #33c5ba
+*.color7: #bfbaac
+*.color15: #fdf6e3
+URxvt.cursorBlink: true
+!URxvt.font:			xft:IBM 3270:pixelsize=16
+!URxvt.boldFont:		xft:IBM 3270:bold:pixelsize=16
+URxvt.scrollBar:	false
+URxvt.saveLines:	65535
+URxvtperl-ext-common: keyboard-select,url-select,clipboard,resize-font
+URxvt.keysym.M-Escape: perl:keyboard-select:activate
+URxvt.keysym.M-s: perl:keyboard-select:search
+URxvt.keysym.M-u: perl:url-select:select_next
+URxvt.keysym.M-c:   perl:clipboard:copy
+URxvt.keysym.M-v:   perl:clipboard:paste
+URxvt.keysym.M-C-v: perl:clipboard:paste_escaped
+URxvt.iso14755: false
+URxvt.iso14755_52: false
