@@ -1,0 +1,2 @@
+comp=ssh://git@vc.compiler.company/comp/repos
+org=ssh://git@vc.compiler.company/ellis/org
