@@ -1,0 +1,9 @@
+;;; -*- mode:skel; -*-
+:user ellis
+:packy "~/.packy"
+:wm stumpwm
+:shell bash
+:browser chromium
+:editor emacs
+:stash "~/stash"
+:store "~/store"
