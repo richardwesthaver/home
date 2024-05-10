@@ -8,11 +8,12 @@
 :auto-insert t
 :license :mpl2
 :log-level :info
-:shed "~/shed"
-:stash "~/stash"
-:cache "~/.cache/skel"
+:shed ".shed"
+:stash ".stash"
+:scratch ".stash/scratch"
+:cache ".cache"
 :registry "~/.data/skel/registry"
-:scripts "/usr/local/stash/scripts"
+:scripts ("/usr/local/share/stash/scripts" "~/stash/scripts")
 :alias-list
 (("p" "vc push")
  ("P" "vc pull")

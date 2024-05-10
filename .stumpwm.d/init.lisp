@@ -8,6 +8,7 @@
       *startup-message* "Greetings, stranger.")
 
 ;; (set-font "CommitMono")
+(set-module-dir "/usr/share/stupmwm/contrib/")
 (init-load-path *module-dir*)
 
 (setf *window-format* "%m%n%s%c")
@@ -21,3 +22,14 @@
 
 (when *initializing*
   (run-shell-command "sh ~/.fehbg"))
+
+(which-key-mode)
+
+(defcommand term (&optional program) ()
+  (sb-thread:make-thread
+   (lambda ()
+     (run-shell-command (if program
+                            (format nil "alacritty ~A" program)
+                            "alacritty")))))
+
+(define-key *root-map* (kbd "c") "term")
