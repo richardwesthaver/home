@@ -7,3 +7,4 @@
 :editor emacs
 :stash "~/stash"
 :store "~/store"
+:src "~/comp/home"
