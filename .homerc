@@ -5,4 +5,4 @@
 :shell :bash
 :browser "/usr/bin/chromium"
 :editor :emacs
-:src "~/dev/comp/home/"
+:src "~/comp/home/"
