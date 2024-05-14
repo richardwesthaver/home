@@ -1,7 +1,7 @@
 (require :stumpwm)
-(require :swank)
+;; (require :swank)
 (in-package :stumpwm)
-(swank-loader:init)
+;; (swank-loader:init)
 
 (setq *mouse-focus-policy*    :sloppy
       *float-window-modifier* :SUPER
@@ -11,7 +11,7 @@
 (set-module-dir "/usr/share/stupmwm/contrib/")
 (init-load-path *module-dir*)
 
-(setf *window-format* "%m%n%s%c")
+;;(setf *window-format* "%m%n%s%c")
 (setf *screen-mode-line-format* (list "[^B%n^b] %W^>%d"))
 
 (setf *time-modeline-string* "%a %b %e %k:%M")

@@ -35,8 +35,8 @@ eman() {
     emacsclient -c -e "(man \"$1\")"
 }
 
-alias ec='emacsclient -c'
-alias et='emacsclient -t'
+alias ec='emacsclient -c -a='
+alias et='emacsclient -t -a='
 alias lr='rlwrap sbcl'
 alias hgpu='hg pull -u'
 alias hgc='hg ci -m'
