@@ -1,0 +1,10 @@
+;;; .skelrc --- worker  -*- mode: skel; -*-
+:name "worker <worker@compiler.company>"
+:user "worker"
+:version "0.1.0"
+:vc :hg
+:log-level :debug
+:stash "/opt/stash"
+:cache "~/.cache/skel"
+:registry "/opt/stash/data/skel/registry"
+:scripts "/opt/stash/scripts"
