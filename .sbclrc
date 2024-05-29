@@ -26,8 +26,8 @@
 
 (mapc #'include-projects-from
       (mapcar (lambda (x) (merge-pathnames x (user-homedir-pathname)))
-              (list "dev/comp/core/lisp/"
-                    "dev/comp/demo/"
-                    "dev/comp/scratch/")))
+              (list "comp/core/lisp/"
+                    "comp/demo/"
+                    "comp/scratch/")))
 
 ;; (require :sb-aclrepl)

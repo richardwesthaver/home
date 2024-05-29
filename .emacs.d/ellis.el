@@ -25,14 +25,14 @@
 ;;; Code:
 (require 'inbox)
 (require 'sk)
-(require 'slime-cape)
+;; (require 'slime-cape)
 (require 'sxp)
 (require 'ulang)
 
 (defalias 'make #'compile)
 
 (setopt default-theme 'modus-vivendi-tritanopia
-        user-lab-directory (join-paths user-home-directory "dev")
+        user-lab-directory (join-paths user-home-directory "lab")
         company-source-directory (join-paths user-lab-directory "comp"))
 
 (unless (display-graphic-p) (setq default-theme 'wheatgrass))
@@ -53,8 +53,9 @@
 (keymap-set emacs-lisp-mode-map "C-c C-l" #'load-file)
 (keymap-set emacs-lisp-mode-map "C-c M-k" #'elisp-byte-compile-file)
 
-;; (add-hook 'common-lisp-mode-hook #'enable-paredit-mode)
-;; (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
+(require 'paredit)
+(add-hook 'common-lisp-mode-hook #'enable-paredit-mode)
+(add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
 
 (repeat-mode)
 
@@ -273,14 +274,17 @@
     (async-shell-command 
      "etags ./*.el \\
 ./lib/*.el \\
-~/dev/comp/org/*.el \\
-~/dev/comp/core/emacs/*.el \\
-~/dev/comp/core/emacs/lib/*.el \\
+~/comp/org/*.el \\
+~/comp/core/emacs/*.el \\
+~/comp/core/emacs/lib/*.el \\
 -o TAGS")))
 
 (unless (string-equal "hyde"  system-name)
   (add-hook 'dired-mode-hook #'all-the-icons-dired-mode)
   (add-hook 'ibuffer-mode-hook #'all-the-icons-ibuffer-mode))
+
+;; strangerdanger
+(setq slime-enable-evaluate-in-emacs t)
 
 (provide 'ellis)
 ;;; ellis.el ends here
