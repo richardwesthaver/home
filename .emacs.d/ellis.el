@@ -283,5 +283,8 @@
   (add-hook 'dired-mode-hook #'all-the-icons-dired-mode)
   (add-hook 'ibuffer-mode-hook #'all-the-icons-ibuffer-mode))
 
+;; strangerdanger
+(setq slime-enable-evaluate-in-emacs t)
+
 (provide 'ellis)
 ;;; ellis.el ends here
