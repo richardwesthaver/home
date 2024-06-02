@@ -1,13 +1,5 @@
 ;;; .sbclrc --- sbcl init file -*- mode: common-lisp; -*-
 (require :asdf)
-;;; If a fasl was stale, try to recompile and load (once).
-(defmethod asdf:perform :around ((o asdf:load-op)
-                                 (c asdf:cl-source-file))
-  (handler-case (call-next-method o c)
-    ;; If a fasl was stale, try to recompile and load (once).
-    (sb-ext:invalid-fasl ()
-      (asdf:perform (make-instance 'asdf:compile-op) c)
-      (call-next-method))))
 
 (setq *debug-beginner-help-p* nil
       ;; *print-case* :downcase
@@ -15,7 +7,7 @@
       *print-length* 256)
 
 #-quicklisp
-(let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp" (user-homedir-pathname))))
+(let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp" "/usr/local/share/lisp/")))
   (when (probe-file quicklisp-init)
     (load quicklisp-init)))
 ;; (ql:quickload :clouseau)
