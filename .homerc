@@ -1,8 +1,8 @@
 ;;; -*- mode:skel; -*-
 :user ellis
-:packy "~/.packy"
+:packy "~/.stash/packy"
 :wm :stumpwm
 :shell :bash
-:browser "/usr/bin/chromium"
+:browser "eww"
 :editor :emacs
 :src "~/comp/home/"
