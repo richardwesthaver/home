@@ -1,24 +1,19 @@
 ;;; .sbclrc --- sbcl init file -*- mode: common-lisp; -*-
 (require :asdf)
-;;; If a fasl was stale, try to recompile and load (once).
-(defmethod asdf:perform :around ((o asdf:load-op)
-                                 (c asdf:cl-source-file))
-  (handler-case (call-next-method o c)
-    ;; If a fasl was stale, try to recompile and load (once).
-    (sb-ext:invalid-fasl ()
-      (asdf:perform (make-instance 'asdf:compile-op) c)
-      (call-next-method))))
-
+(in-package :cl-user)
 (setq *debug-beginner-help-p* nil
       ;; *print-case* :downcase
       *print-level* 32
       *print-length* 256)
 
+(defvar *quicklisp-setup* (or (probe-file #P"/usr/local/share/lisp/quicklisp/setup.lisp")
+                              (probe-file (merge-pathnames "quicklisp/setup.lisp" (user-homedir-pathname)))))
+
 #-quicklisp
-(let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp" (user-homedir-pathname))))
-  (when (probe-file quicklisp-init)
-    (load quicklisp-init)))
+(when *quicklisp-setup*
+  (load *quicklisp-setup*))
 ;; (ql:quickload :clouseau)
+
 (defun include-projects-from (path)
   "Add PATH to QL;*LOCAL-PROJECT-DIRECTORIES* and ASDF:*CENTRAL-REGISTRY*."
   (pushnew path ql:*local-project-directories*)
