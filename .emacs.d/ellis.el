@@ -77,19 +77,11 @@
 (keymap-set ctl-x-x-map "p p" #'remember-project)
 (keymap-set ctl-x-x-map "p l" #'remember-lab-projects)
 
-(add-hook 'prog-mode-hook #'skt-mode)
-(add-hook 'org-mode-hook #'skt-mode)
+(add-hook 'prog-mode-hook #'skel-minor-mode)
+(add-hook 'org-mode-hook #'skel-minor-mode)
 (add-hook 'prog-mode-hook #'company-mode)
 
 (add-hook 'notmuch-message-mode-hook #'turn-on-orgtbl)
-
-(setopt skt-enable-tempo-elements t
-        skt-completing-read t
-        skt-delete-duplicate-marks t)
-
-(keymap-set skt-mode-map "C-c M-b" #'tempo-backward-mark)
-(keymap-set skt-mode-map "C-c M-f" #'tempo-forward-mark)
-(keymap-set skt-mode-map "C-c M-a" #'tempo-complete-tag)
 
 (use-package markdown-mode :ensure t)
 
@@ -572,6 +564,99 @@ EXT is a list of the extensions of files to be included."
                           org-agenda-extensions)))
 
 (add-hook 'after-init-hook 'org-set-agenda-files)
+
+;;; Skel Config
+
+(setopt skt-enable-tempo-elements t
+        skt-delete-duplicate-marks t)
+
+(keymap-set skt-minor-mode-map "b" #'tempo-backward-mark)
+(keymap-set skt-minor-mode-map "f" #'tempo-forward-mark)
+(keymap-set skt-minor-mode-map "SPC" #'tempo-complete-tag)
+(keymap-set skt-minor-mode-map "t" #'skt-add-tag)
+
+(skt-define-template defmacro (:abbrev "defvar" :tag t :mode lisp-mode)
+  "(defmacro " (p "Name: ") " (" (p "Args: ") ")" > n> r ")")
+
+(skt-define-template defun (:abbrev "defvar" :tag t :mode lisp-mode)
+  "(defun " (p "Name: ") " (" (p "Args: ") ")" > n> r ")")
+
+(skt-define-template defvar (:abbrev "defvar" :tag t :mode lisp-mode)
+  > "(defvar " > r ")")
+
+(skt-define-function capture (:abbrev "capture" :tag t) org-capture)
+(skt-define-function agenda (:abbrev "agenda" :tag t) org-agenda)
+(skt-define-function mjump (:abbrev "mjump" :tag t) bookmark-jump)
+(skt-define-function bjump (:abbrev "bjump" :tag t) ibuffer-jump)
+(skt-define-function rjump (:abbrev "rjump" :tag t)
+  (lambda () (jump-to-register (read-char "register: "))))
+(skt-define-function pjump (:abbrev "pjump" :tag t) (lambda () (project-switch-project default-directory)))
+
+(defvar skt-skeleton-path-function #'abbreviate-file-name
+  "Function to be called when expanding file-header skeletons. Useful to
+rebind locally inside a project or module, where you want to delete some
+prefix or replace it.")
+
+(defun skt-buffer-path () (funcall skt-skeleton-path-function buffer-file-name))
+
+(defun skt-skelfile-path ()
+  (if (string= (file-name-nondirectory buffer-file-name) "skelfile")
+      "skelfile"
+    (skt-buffer-path)))
+
+(skt-define-skeleton head (:abbrev "head" :mode lisp-mode)
+  "title: "
+  ";;; " (skt-buffer-path) " --- " str \n \n \n ";;; Code:" \n > _)
+
+(skt-define-skeleton head (:abbrev "head" :mode rust-mode)
+  "title: "
+  "//! " (skt-buffer-path) " --- " str \n \n "// " _ \n \n "//! Code:" \n > _)
+
+(skt-define-skeleton head (:abbrev "head" :mode skel-mode)
+  "title: "
+  ";;; " (skt-skelfile-path) " --- " str " -*- mode: skel; -*-" \n _)
+
+(skt-define-skeleton head (:abbrev "head" :mode org-mode)
+  "title: "
+  "#+title: " str \n
+  "#+author: " (skeleton-read "author: ") \n
+  "#+description: " (skeleton-read "description: ") \n
+  "#+setupfile: clean.theme" \n > _)
+
+(skt-define-skeleton local-vars
+    (:tag t :abbrev "local-vars"
+     :docstring "Insert a local variables section.  Use current comment syntax if any.")
+ (completing-read "Mode: " obarray
+		   (lambda (symbol)
+		     (if (commandp symbol)
+			 (string-match "-mode$" (symbol-name symbol))))
+		   t)
+ '(save-excursion
+    (if (re-search-forward page-delimiter nil t)
+	 (error "Not on last page")))
+ comment-start "Local Variables:" comment-end \n
+ comment-start "mode: " str
+ & -5 | '(kill-line 0) & -1 | comment-end \n
+ ( (completing-read (format "Variable, %s: " skeleton-subprompt)
+		     obarray
+		     (lambda (symbol)
+		       (or (eq symbol 'eval)
+			   (custom-variable-p symbol)))
+		     t)
+   comment-start str ": "
+   (read-from-minibuffer "Expression: " nil read-expression-map nil
+			  'read-expression-history) | _
+                          comment-end \n)
+ resume:
+ comment-start "End:" comment-end \n)
+
+;; autoinsert
+(skt-register-auto-insert "skelfile" #'skt-template-skel-head)
+(setq auto-insert :unmodified)
+(setq auto-insert-query nil)
+(auto-insert-mode t)
+
+(keymap-set skel-minor-mode-map "C-<return>" 'company-tempo)
 
 (provide 'ellis)
 ;;; ellis.el ends here
