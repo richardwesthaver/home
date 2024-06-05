@@ -575,7 +575,9 @@ EXT is a list of the extensions of files to be included."
 rebind locally inside a project or module, where you want to delete some
 prefix or replace it.")
 
-  (defun skt-buffer-path () (funcall skt-skeleton-path-function buffer-file-name))
+  (defun skt-buffer-path (&optional function)
+    (let ((path (or buffer-file-name (format "%s.lisp" (gensym "scratch-")))))
+      (funcall (or function skt-skeleton-path-function) path)))
 
   (defun skt-skelfile-path ()
     (if (string= (file-name-nondirectory buffer-file-name) "skelfile")
@@ -609,31 +611,22 @@ prefix or replace it.")
   ;; (skt-define-template defpackage (:mode lisp-mode :tag t :abbrev "defpackage"))
   ;; (skt-define-template defpkg (:mode lisp-mode :tag t :abbrev "defpkg"))
 
-  (skt-define-template defmacro (:abbrev "defvar" :tag t :mode lisp-mode)
+  (skt-define-template defmacro (:abbrev "(defmacro" :tag t :mode lisp-mode)
     "(defmacro " (p "Name: ") " (" (p "Args: ") ")" > n> r ")")
 
-  (skt-define-template defun (:abbrev "defvar" :tag t :mode lisp-mode)
+  (skt-define-template defun (:abbrev "(defun" :tag t :mode lisp-mode)
     "(defun " (p "Name: ") " (" (p "Args: ") ")" > n> r ")")
 
-  (skt-define-template defvar (:abbrev "defvar" :tag t :mode lisp-mode)
+  (skt-define-template defvar (:abbrev "(defvar" :tag t :mode lisp-mode)
     > "(defvar " > r ")")
 
   ;; skeletons
   (skt-define-skeleton head (:abbrev "head" :mode lisp-mode)
-    "title: "
-    ";;; " (skt-buffer-path) " --- " str \n \n \n ";;; Code:" \n > _)
-
-  (skt-define-skeleton system-head (:abbrev "system-head" :mode lisp-mode)
-    "name: "
-    ";;; " (skt-buffer-path) " --- "
-    '(setq v1 (file-name-base (skt-buffer-path))) (capitalize v1)
-    " Sytem Definitions" \n
-    > "(defsystem :" v1 \n
-    > ":depends-on (:std :log)" \n
-    > ":components ((:file \"pkg\")" _ "))")
+      "description: "
+      ";;; " (skt-buffer-path 'file-name-nondirectory) " --- " str \n \n ";; " _ \n \n ";;; Code:" \n >)
 
   (skt-define-skeleton head (:abbrev "head" :mode skel-mode)
-    "title: "
+    "description: "
     ";;; " (skt-skelfile-path) " --- " str " -*- mode: skel; -*-" \n _)
 
   (skt-define-skeleton head (:abbrev "head" :mode org-mode)
@@ -642,6 +635,28 @@ prefix or replace it.")
     "#+author: " (skeleton-read "author: ") \n
     "#+description: " (skeleton-read "description: ") \n
     "#+setupfile: clean.theme" \n > _)
+
+  (skt-define-skeleton head (:abbrev "head" :mode rust-mode)
+    "description: "
+    "//! " (skt-buffer-path 'file-name-nondirectory) " --- " str \n \n "// " _ \n \n "//! Code: " \n >)
+
+  (skt-define-skeleton system-head (:abbrev "system-head" :mode lisp-mode)
+    "system-name: "
+    ";;; " (skt-buffer-path) " --- "
+    '(setq v1 (file-name-base (skt-buffer-path))) (capitalize v1)
+    " Sytem Definitions" \n
+    > "(defsystem :" v1 \n
+    > ":depends-on (:std :log)" \n
+    > ":components ((:file \"pkg\")" _ "))")
+
+  (skt-define-skeleton crate-head (:abbrev "crate-head" :mode conf-toml-mode)
+    "ignored"
+    "### " (skt-buffer-path 'file-name-nondirectory) " --- " 
+    '(setq v1 (skeleton-read "name: ")) v1 " Cargo Manifest" \n >
+    "[package]" \n
+    "name = \"" v1 "\"" \n
+    "version = \"" skt-default-version "\"" \n
+    "[dependencies]" \n >)
 
   (skt-define-skeleton local-vars
       (:tag t :abbrev "local-vars"
@@ -673,9 +688,11 @@ prefix or replace it.")
   ;; autoinsert
   (skt-register-auto-insert "skelfile" #'skt-template-skel-head)
   (skt-register-auto-insert "readme.org" #'skt-template-org-readme)
+  (skt-register-auto-insert "Cargo.toml" #'skt-template-conf-toml-crate-head)
   (skt-register-auto-insert ".*[.]asd" #'skt-template-lisp-system-head)
+  (skt-register-auto-insert ".*[.]lisp" #'skt-template-lisp-head)
+  (skt-register-auto-insert ".*[.].rs" #'skt-template-rust-head)
   (auto-insert-mode t)
-
   (keymap-set skel-minor-mode-map "C-<return>" 'company-tempo))
 
 (provide 'ellis)
