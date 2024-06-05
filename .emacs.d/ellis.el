@@ -553,27 +553,18 @@ EXT is a list of the extensions of files to be included."
 
 ;;; Skel Config
 (use-package skel
-  :requires skel
+  :defer t
   :load-path user-emacs-lib-directory
-  :custom
-  tempo-interactive t
-  auto-insert 'unmodified
-  auto-insert-query nil
-  skt-enable-tempo-elements t
-  skt-delete-duplicate-marks t
   :config
+  (setq
+   tempo-interactive t
+   auto-insert 'no-modify
+   auto-insert-query nil
+   skt-enable-tempo-elements t
+   skt-delete-duplicate-marks t)
+
   (defvar skt-default-version "0.1.0")
-  (skt-define-template readme (:mode org-mode :tag t)
-    "#+title: " (p "title: ") n
-    "#+description: " (p "description: ") n
-    "#+author: " user-full-name n
-    "#+email:" user-mail-address n
-    "#+setupfile: clean.theme" n
-    "#+export_file_name: index" n>
-    p n> n>
-    ":info:" n>
-    "+ version :: " skt-default-version n
-    ":end:" n>)
+
   (keymap-set skt-minor-mode-map "b" #'tempo-backward-mark)
   (keymap-set skt-minor-mode-map "f" #'tempo-forward-mark)
   (keymap-set skt-minor-mode-map "SPC" #'tempo-complete-tag)
@@ -590,11 +581,34 @@ prefix or replace it.")
     (if (string= (file-name-nondirectory buffer-file-name) "skelfile")
         "skelfile"
       (skt-buffer-path)))
+
+  ;; functions
+  (skt-define-function capture (:abbrev "capture" :tag t) org-capture)
+  (skt-define-function agenda (:abbrev "agenda" :tag t) org-agenda)
+  (skt-define-function mjump (:abbrev "mjump" :tag t) bookmark-jump)
+  (skt-define-function bjump (:abbrev "bjump" :tag t) ibuffer-jump)
+  (skt-define-function rjump (:abbrev "rjump" :tag t)
+    (lambda () (jump-to-register (read-char "register: "))))
+  (skt-define-function pjump (:abbrev "pjump" :tag t) (lambda () (project-switch-project default-directory)))
+
+  ;; templates
+  (skt-define-template readme (:mode org-mode :tag t)
+    "#+title: " (p "title: ") n
+    "#+description: " (p "description: ") n
+    "#+author: " user-full-name n
+    "#+email:" user-mail-address n
+    "#+setupfile: clean.theme" n
+    "#+export_file_name: index" n>
+    p n> n>
+    ":info:" n>
+    "+ version :: " skt-default-version n
+    ":end:" n>)
+
   ;; TODO 2024-06-04: 
   ;; (skt-define-template defsystem (:mode lisp-mode :tag t :abbrev "defsystem"))
   ;; (skt-define-template defpackage (:mode lisp-mode :tag t :abbrev "defpackage"))
   ;; (skt-define-template defpkg (:mode lisp-mode :tag t :abbrev "defpkg"))
-  
+
   (skt-define-template defmacro (:abbrev "defvar" :tag t :mode lisp-mode)
     "(defmacro " (p "Name: ") " (" (p "Args: ") ")" > n> r ")")
 
@@ -604,14 +618,7 @@ prefix or replace it.")
   (skt-define-template defvar (:abbrev "defvar" :tag t :mode lisp-mode)
     > "(defvar " > r ")")
 
-  (skt-define-function capture (:abbrev "capture" :tag t) org-capture)
-  (skt-define-function agenda (:abbrev "agenda" :tag t) org-agenda)
-  (skt-define-function mjump (:abbrev "mjump" :tag t) bookmark-jump)
-  (skt-define-function bjump (:abbrev "bjump" :tag t) ibuffer-jump)
-  (skt-define-function rjump (:abbrev "rjump" :tag t)
-    (lambda () (jump-to-register (read-char "register: "))))
-  (skt-define-function pjump (:abbrev "pjump" :tag t) (lambda () (project-switch-project default-directory)))
-
+  ;; skeletons
   (skt-define-skeleton head (:abbrev "head" :mode lisp-mode)
     "title: "
     ";;; " (skt-buffer-path) " --- " str \n \n \n ";;; Code:" \n > _)
@@ -668,6 +675,7 @@ prefix or replace it.")
   (skt-register-auto-insert "readme.org" #'skt-template-org-readme)
   (skt-register-auto-insert ".*[.]asd" #'skt-template-lisp-system-head)
   (auto-insert-mode t)
+
   (keymap-set skel-minor-mode-map "C-<return>" 'company-tempo))
 
 (provide 'ellis)
