@@ -649,6 +649,14 @@ prefix or replace it.")
     > ":depends-on (:std :log)" \n
     > ":components ((:file \"pkg\")" _ "))")
 
+  (skt-define-skeleton pkg-head (:abbrev "pkg-head" :mode lisp-mode)
+    "ignored"
+    ";;; " (skt-buffer-path 'file-name-nondirectory) " --- "
+    '(setq v1 (skeleton-read "name: ")) v1 " Package Definitions" \n
+    > "(defpkg :" v1 \n
+    > ":use (:std :log))" \n \n
+    > "(in-package :" v1 ")" \n >)
+    
   (skt-define-skeleton crate-head (:abbrev "crate-head" :mode conf-toml-mode)
     "ignored"
     "### " (skt-buffer-path 'file-name-nondirectory) " --- " 
@@ -689,6 +697,7 @@ prefix or replace it.")
   (skt-register-auto-insert "skelfile" #'skt-template-skel-head)
   (skt-register-auto-insert "readme.org" #'skt-template-org-readme)
   (skt-register-auto-insert "Cargo.toml" #'skt-template-conf-toml-crate-head)
+  (skt-register-auto-insert "pkg.lisp" #'skt-template-lisp-pkg-head)
   (skt-register-auto-insert ".*[.]asd" #'skt-template-lisp-system-head)
   (skt-register-auto-insert ".*[.]lisp" #'skt-template-lisp-head)
   (skt-register-auto-insert ".*[.].rs" #'skt-template-rust-head)
