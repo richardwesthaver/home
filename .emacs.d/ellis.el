@@ -35,7 +35,7 @@
         user-lab-directory (join-paths user-home-directory "lab")
         company-source-directory (join-paths user-home-directory "comp"))
 
-(unless (display-graphic-p) (setq default-theme 'wheatgrass))
+;; (unless (display-graphic-p) (setq default-theme 'wheatgrass))
 
 (when (linux-p) (setq dired-listing-switches "-alsh"))
 
@@ -190,8 +190,8 @@
   :init
   (defun yt-dl-it (url)
     "Downloads the URL in an async shell"
-    (let ((default-directory "~/media/yt"))
-      (async-shell-command (format "youtube-dl %s" url))))
+    (let ((default-directory user-stash-directory))
+      (async-shell-command (format "yt-dlp %s" url))))
 
   (defun elfeed-youtube-dl (&optional use-generic-p)
     "Youtube-DL link"
@@ -207,6 +207,25 @@
   (keymap-set elfeed-search-mode-map "d" 'elfeed-youtube-dl)
   (keymap-set user-map "e f" #'elfeed)
   (keymap-set user-map "e F" #'elfeed-update))
+
+(use-package elfeed-tube
+  :ensure t
+  :after elfeed
+  :config
+  ;; (elfeed-tube-setup)
+  (elfeed-tube-add-feeds '("detroit techno" "boiler room dj" "brad mehldau" "chris 'daddy' dave"))
+  :bind (:map elfeed-show-mode-map
+         ("F" . elfeed-tube-fetch)
+         ([remap save-buffer] . elfeed-tube-save)
+         :map elfeed-search-mode-map
+         ("F" . elfeed-tube-fetch)
+         ([remap save-buffer] . elfeed-tube-save)))
+
+(use-package elfeed-tube-mpv
+  :ensure t
+  :bind (:map elfeed-show-mode-map
+              ("C-c C-f" . elfeed-tube-mpv-follow-mode)
+              ("C-c C-w" . elfeed-tube-mpv-where)))
 
 (use-package org-mime :ensure t)
 
@@ -308,7 +327,7 @@ of its arguments."
             (let ((desc (match-string-no-properties 5)))
               (save-match-data
                 (cl-incf wc (length (remove "" (org-split-string
-                                             desc "\\W")))))))
+                                                desc "\\W")))))))
           (goto-char (match-end 0)))
          ((looking-at org-any-link-re)
           (goto-char (match-end 0)))
@@ -495,13 +514,13 @@ the result as a time value."
         (org-remove-empty-drawer-at "PROPERTIES" (match-beginning 0))))))
 
 (defun check-for-clock-out-note ()
-      (interactive)
-      (save-excursion
-        (org-back-to-heading)
-        (let ((tags (org-get-tags)))
-          (and tags (message "tags: %s " tags)
-               (when (member "clocknote" tags)
-                 (org-add-note))))))
+  (interactive)
+  (save-excursion
+    (org-back-to-heading)
+    (let ((tags (org-get-tags)))
+      (and tags (message "tags: %s " tags)
+           (when (member "clocknote" tags)
+             (org-add-note))))))
 
 (add-hook 'org-clock-out-hook 'check-for-clock-out-note)
 
@@ -553,18 +572,21 @@ EXT is a list of the extensions of files to be included."
 
 ;;; Skel Config
 (use-package skel
-  :defer t
+  :requires skel
   :load-path user-emacs-lib-directory
+  :custom
+  tempo-interactive t  
+  auto-insert 'no-modify
+  auto-insert-query nil)
+
+(use-package skt
+  :requires (skel skt)
+  :load-path user-emacs-lib-directory
+  :custom
+  skt-enable-tempo-elements t
+  skt-delete-duplicate-marks t
   :config
-  (setq
-   tempo-interactive t
-   auto-insert 'no-modify
-   auto-insert-query nil
-   skt-enable-tempo-elements t
-   skt-delete-duplicate-marks t)
-
   (defvar skt-default-version "0.1.0")
-
   (keymap-set skt-minor-mode-map "b" #'tempo-backward-mark)
   (keymap-set skt-minor-mode-map "f" #'tempo-forward-mark)
   (keymap-set skt-minor-mode-map "SPC" #'tempo-complete-tag)
@@ -606,6 +628,9 @@ prefix or replace it.")
     "+ version :: " skt-default-version n
     ":end:" n>)
 
+  (skt-define-template clean.theme (:mode org-mode :tag t)
+    "#+setupfile: " (join-paths company-cdn-url "org/clean.theme"))
+
   ;; TODO 2024-06-04: 
   ;; (skt-define-template defsystem (:mode lisp-mode :tag t :abbrev "defsystem"))
   ;; (skt-define-template defpackage (:mode lisp-mode :tag t :abbrev "defpackage"))
@@ -622,8 +647,8 @@ prefix or replace it.")
 
   ;; skeletons
   (skt-define-skeleton head (:abbrev "head" :mode lisp-mode)
-      "description: "
-      ";;; " (skt-buffer-path 'file-name-nondirectory) " --- " str \n \n ";; " _ \n \n ";;; Code:" \n >)
+    "description: "
+    ";;; " (skt-buffer-path 'file-name-nondirectory) " --- " str \n \n ";; " _ \n \n ";;; Code:" \n >)
 
   (skt-define-skeleton head (:abbrev "head" :mode skel-mode)
     "description: "
@@ -656,7 +681,7 @@ prefix or replace it.")
     > "(defpkg :" v1 \n
     > ":use (:std :log))" \n \n
     > "(in-package :" v1 ")" \n >)
-    
+  
   (skt-define-skeleton crate-head (:abbrev "crate-head" :mode conf-toml-mode)
     "ignored"
     "### " (skt-buffer-path 'file-name-nondirectory) " --- " 

@@ -1,6 +1,10 @@
 ;;; .sbclrc --- sbcl init file -*- mode: common-lisp; -*-
-(require :asdf)
 (in-package :cl-user)
+(require :asdf)
+(require :sb-concurrency)
+(require :sb-cltl2)
+(require :sb-rotate-byte)
+(require :sb-sprof)
 (setq *debug-beginner-help-p* nil
       ;; *print-case* :downcase
       *print-level* 32
