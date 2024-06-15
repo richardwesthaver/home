@@ -1,16 +1,23 @@
 ;;; .sbclrc --- sbcl init file -*- mode: common-lisp; -*-
+(in-package :cl-user)
 (require :asdf)
-
+(require :sb-concurrency)
+(require :sb-cltl2)
+(require :sb-rotate-byte)
+(require :sb-sprof)
 (setq *debug-beginner-help-p* nil
       ;; *print-case* :downcase
       *print-level* 32
       *print-length* 256)
 
+(defvar *quicklisp-setup* (or (probe-file #P"/usr/local/share/lisp/quicklisp/setup.lisp")
+                              (probe-file (merge-pathnames "quicklisp/setup.lisp" (user-homedir-pathname)))))
+
 #-quicklisp
-(let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp" "/usr/local/share/lisp/")))
-  (when (probe-file quicklisp-init)
-    (load quicklisp-init)))
+(when *quicklisp-setup*
+  (load *quicklisp-setup*))
 ;; (ql:quickload :clouseau)
+
 (defun include-projects-from (path)
   "Add PATH to QL;*LOCAL-PROJECT-DIRECTORIES* and ASDF:*CENTRAL-REGISTRY*."
   (pushnew path ql:*local-project-directories*)
