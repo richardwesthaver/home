@@ -10,8 +10,8 @@
       *print-level* 32
       *print-length* 256)
 
-(defvar *quicklisp-setup* (or (probe-file #P"/usr/local/share/lisp/quicklisp/setup.lisp")
-                              (probe-file (merge-pathnames "quicklisp/setup.lisp" (user-homedir-pathname)))))
+(defvar *quicklisp-setup* (or (probe-file #P"~/.stash/quicklisp/setup.lisp")
+                              (probe-file #P"/usr/local/share/lisp/quicklisp/setup.lisp")))
 
 #-quicklisp
 (when *quicklisp-setup*
@@ -20,7 +20,7 @@
 
 (defun include-projects-from (path)
   "Add PATH to QL;*LOCAL-PROJECT-DIRECTORIES* and ASDF:*CENTRAL-REGISTRY*."
-  (pushnew path ql:*local-project-directories*)
+  #+quicklisp (pushnew path ql:*local-project-directories*)
   (pushnew path asdf:*central-registry*))
 
 (mapc #'include-projects-from
