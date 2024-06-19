@@ -1,6 +1,6 @@
-;;; ellis.el --- Richard's custom-file -*- lexical-binding: t; -*-
+;;; ellis.el --- Richard's custom Emacs config -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2023  
+;; Copyright (C) 2024
 
 ;; Author: Richard Westhaver <ellis@rwest.io>
 
@@ -25,7 +25,6 @@
 ;;; Code:
 (require 'inbox)
 (require 'sk)
-;; (require 'slime-cape)
 (require 'sxp)
 (require 'ulang)
 
@@ -55,8 +54,6 @@
 (keymap-set user-map "v t" #'org-tags-view)
 
 (require 'paredit)
-(add-hook 'lisp-mode-hook #'enable-paredit-mode)
-(add-hook 'slime-editing-mode-hook #'enable-paredit-mode)
 (repeat-mode)
 
 (defun remember-project ()
@@ -79,7 +76,7 @@
 
 (add-hook 'prog-mode-hook #'skel-minor-mode)
 (add-hook 'org-mode-hook #'skel-minor-mode)
-(add-hook 'prog-mode-hook #'company-mode)
+;; (add-hook 'prog-mode-hook #'company-mode)
 
 (add-hook 'notmuch-message-mode-hook #'turn-on-orgtbl)
 
@@ -276,7 +273,6 @@
     (async-shell-command 
      "etags ./*.el \\
 ./lib/*.el \\
-~/comp/org/*.el \\
 ~/comp/core/emacs/*.el \\
 ~/comp/core/emacs/lib/*.el \\
 -o TAGS")))
