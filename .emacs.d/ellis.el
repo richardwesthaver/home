@@ -230,6 +230,7 @@
   :hook (sh-mode . flymake-mode))
 
 ;;; Org Config
+(setq publish-dir "/ssh:rurik:/srv/http/compiler.company")
 (keymap-set user-map "t" #'org-todo)
 
 ;; populate org-babel
