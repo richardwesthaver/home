@@ -56,6 +56,14 @@
 (require 'paredit)
 (repeat-mode)
 
+(keymap-set lisp-mode-shared-map "C-(" #'paredit-open-round)
+(keymap-set lisp-mode-shared-map "M-(" #'paredit-wrap-sexp)
+(keymap-set lisp-mode-shared-map "M-;" #'paredit-comment-dwim)
+(keymap-set lisp-mode-shared-map "C-{" #'paredit-backward-barf-sexp)
+(keymap-set lisp-mode-shared-map "C-}" #'paredit-forward-barf-sexp)
+(keymap-set lisp-mode-shared-map "C-M-{" #'paredit-forward-slurp-sexp)
+(keymap-set lisp-mode-shared-map "C-M-}" #'paredit-backward-slurp-sexp)
+
 (defun remember-project ()
   (interactive)
   (project-remember-project (project-current))
