@@ -2,6 +2,14 @@
 
 (in-package :stumpwm)
 
+(defvar *stumpwm-port* 4004)
+(ql:quickload :swank)
+(require :swank)
+(swank-loader:init)
+(ignore-errors
+ (swank:create-server :port *stumpwm-port*
+                      :style swank:*communication-style*))
+
 (setq *mouse-focus-policy*    :sloppy
       *float-window-modifier* :SUPER
       *startup-message* "Greetings, stranger.")
@@ -18,12 +26,6 @@
 (setq *mode-line-timeout* 4)
 
 (when *initializing*
-  (defvar *stumpwm-port* 4004)
-  (require :swank)
-  (swank-loader:init)
-  (swank:create-server :port *stumpwm-port*
-                       :style swank:*communication-style*
-                       :dont-close t)
   (run-shell-command "sh ~/.fehbg")
   (when (equal (machine-instance) "zor")
     (run-shell-command "sh ~/.screenlayout/default.sh"))
