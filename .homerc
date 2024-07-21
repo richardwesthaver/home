@@ -2,4 +2,4 @@
 :user vc
 :packy "~/.stash/packy"
 :shell :bash
-:src "~/.stash/home"
+:src "~/.stash/home/"
