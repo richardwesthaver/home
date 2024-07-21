@@ -1,0 +1,4 @@
+;;; -*- mode:skel; -*-
+:user vc
+:packy "~/.stash/packy"
+:shell :bash

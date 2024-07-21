@@ -1,0 +1,128 @@
+body { background-color: #232220; color: antiquewhite; }
+h2 { font-family: mono; }
+
+a { text-decoration:none; color: #2B944B; font-weight: bold; }
+a:visited { color: chocolate; }
+a:hover { color: #E7600E; text-decoration:underline overline; }
+.age { white-space:nowrap; color: #87606C;}
+.date { white-space:nowrap; color: #232436; font-weight: bold;}
+.indexlinks { white-space:nowrap; }
+.parity0 { background-color: antiquewhite; color: #111111; font-family: mono; }
+.parity1 { background-color: antiquewhite; color: #111111; font-family: mono;}
+.lineno { width: 60px; color: black; font-size: x-small;
+          text-align: left;
+	  display: inline-table; }
+.author { color: #9470FF; }
+.plusline { color: green; }
+.minusline { color: red; }
+.atline { color: purple; }
+.annotate { font-size: smaller; text-align: right; padding-right: 1em; }
+tr.thisrev a { color:#999999; text-decoration: none; text-style: oblique; }
+tr.thisrev pre { color:#009900; }
+td.annotate {
+  white-space: nowrap;
+}
+div.annotate-info {
+  display: none;
+  position: absolute;
+  background-color: #FFFFFF;
+  border: 1px solid #888;
+  text-align: left;
+  color: #000000;
+  padding: 5px;
+}
+div.annotate-info a { color: #0000FF; }
+td.annotate:hover div.annotate-info { display: inline; }
+div.buttons { background-color: black; padding: 10px; }
+.buttons a {
+  background-color: #D64F53;
+  padding: 2pt;
+  color: wheat;
+  font-family: mono;
+  font-weight: bold;
+  
+}
+.navigate a {
+  background-color: #ccc;
+  padding: 2pt;
+  font-family: mono;
+  color: black;
+}
+
+.metatag {
+  background-color: #000000;
+  color: #FFFF;
+  text-align: right;
+  font-weight: bolder;
+}
+
+/* Common */
+pre { margin: 0; }
+
+.logo {
+  bottom:0;
+  right:0;
+  position:fixed;
+}
+
+/* Changelog/Filelog entries */
+.logEntry { width: 100%; }
+.logEntry .age { width: 15%; }
+.logEntry th.label { width: 16em; }
+.logEntry th { font-weight: normal; text-align: right; vertical-align: top; }
+.logEntry th.age, .logEntry th.firstline { font-weight: bold; }
+.logEntry th.firstline { text-align: left; width: inherit; }
+
+/* Shortlog entries */
+.slogEntry { width: 100%; }
+.slogEntry .age { width: 8em; font-style: italic; }
+.slogEntry td { text-align: left; vertical-align: top; }
+.slogEntry td.author { width: 15em; font-weight: bold;}
+
+/* Tag entries */
+#tagEntries { list-style: none; margin: 0; padding: 0; }
+#tagEntries .tagEntry { list-style: none; margin: 0; padding: 0; }
+
+/* Changeset entry */
+#changesetEntry { }
+#changesetEntry th { font-weight: normal; background-color: #382738; color: #E8CEBD; text-align: right; }
+#changesetEntry th.files, #changesetEntry th.description { vertical-align: top; }
+
+/* File diff view */
+#filediffEntry { }
+#filediffEntry th { font-weight: normal; background-color: #888; color: #fff; text-align: right; }
+
+/* Graph */
+div#wrapper {
+	position: relative;
+	margin: 0;
+	padding: 0;
+}
+
+canvas {
+	position: absolute;
+	z-index: 5;
+	top: -0.6em;
+	margin: 0;
+}
+
+ul#graphnodes {
+	list-style: none inside none;
+	padding: 0;
+	margin: 0;
+}
+
+ul#graphnodes li {
+	height: 37px;
+	overflow: visible;
+	padding-top: 2px;
+}
+
+ul#graphnodes li .fg {
+	position: absolute;
+	z-index: 10;
+}
+
+ul#graphnodes li .info {
+	font-size: 70%;
+}
