@@ -1,5 +1,8 @@
 ;;; -*- mode:skel; -*-
 :user vc
 :packy "~/.stash/packy"
+:wm nil
 :shell :bash
+:browser nil
+:editor nil
 :src "~/.stash/home/"
