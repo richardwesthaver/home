@@ -1,5 +1,5 @@
 ;;; -*- mode:skel; -*-
 :user dev
+:packy "~/.stash/packy"
 :shell :bash
-:editor :emacs
 :src "~/.stash/home/"
