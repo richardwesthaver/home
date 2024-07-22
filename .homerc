@@ -1,0 +1,7 @@
+;;; -*- mode:skel; -*-
+:user dev
+:packy "~/.stash/packy"
+:shell :bash
+:browser "eww"
+:editor :emacs
+:src "~/.stash/home"

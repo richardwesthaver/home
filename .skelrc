@@ -1,0 +1,12 @@
+;;; .skelrc @ 2023-10-12.02:58:08 -*- mode: skel; -*-
+:user "dev"
+:version "0.1.0"
+:tags ("auto")
+:fmt :pretty
+:vc :hg
+:auto-insert t
+:license :mpl2
+:log-level :info
+:stash ".stash"
+:cache ".cache"
+:registry "~/.data/skel/registry"
