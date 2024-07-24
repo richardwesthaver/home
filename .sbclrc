@@ -25,5 +25,5 @@
 
 (mapc #'include-projects-from
       (mapcar (lambda (x) (merge-pathnames x (user-homedir-pathname)))
-              (list ".stash/")))
+              (list ".stash/lisp/" "/usr/local/share/lisp/")))
 ;; (require :sb-aclrepl)
