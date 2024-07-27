@@ -1,0 +1,1371 @@
+{
+  "admin": {
+    "listen": ":2020"
+  },
+  "logging": {
+    "logs": {
+      "default": {
+        "exclude": [
+          "http.log.access.log0",
+          "http.log.access.log1",
+          "http.log.access.log2",
+          "http.log.access.log3"
+        ]
+      },
+      "log0": {
+        "writer": {
+          "filename": "/var/log/caddy/caddy.log",
+          "output": "file"
+        },
+        "encoder": {
+          "format": "json"
+        },
+        "include": [
+          "http.log.access.log0"
+        ]
+      },
+      "log1": {
+        "writer": {
+          "filename": "/var/log/caddy/caddy.log",
+          "output": "file"
+        },
+        "encoder": {
+          "format": "json"
+        },
+        "include": [
+          "http.log.access.log1"
+        ]
+      },
+      "log2": {
+        "writer": {
+          "filename": "/var/log/caddy/caddy.log",
+          "output": "file"
+        },
+        "encoder": {
+          "format": "json"
+        },
+        "include": [
+          "http.log.access.log2"
+        ]
+      },
+      "log3": {
+        "writer": {
+          "filename": "/var/log/caddy/caddy.log",
+          "output": "file"
+        },
+        "encoder": {
+          "format": "json"
+        },
+        "include": [
+          "http.log.access.log3"
+        ]
+      }
+    }
+  },
+  "apps": {
+    "http": {
+      "servers": {
+        "srv0": {
+          "listen": [
+            ":443"
+          ],
+          "enable_full_duplex": true,
+          "routes": [
+            {
+              "match": [
+                {
+                  "host": [
+                    "packy.compiler.company"
+                  ]
+                }
+              ],
+              "handle": [
+                {
+                  "handler": "subroute",
+                  "routes": [
+                    {
+                      "handle": [
+                        {
+                          "handler": "vars",
+                          "root": "/srv/http/packy.compiler.company"
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group23",
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "handler": "headers",
+                                  "response": {
+                                    "deferred": true,
+                                    "set": {
+                                      "Access-Control-Allow-Headers": [
+                                        "*"
+                                      ],
+                                      "Access-Control-Allow-Methods": [
+                                        "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+                                      ],
+                                      "Access-Control-Allow-Origin": [
+                                        "https://packy.compiler.company"
+                                      ],
+                                      "Access-Control-Max-Age": [
+                                        "3600"
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "handler": "static_response",
+                                  "status_code": 204
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "match": [
+                        {
+                          "header": {
+                            "Origin": [
+                              "https://packy.compiler.company"
+                            ]
+                          },
+                          "method": [
+                            "OPTIONS"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group23",
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "handler": "headers",
+                                  "response": {
+                                    "deferred": true,
+                                    "set": {
+                                      "Access-Control-Allow-Origin": [
+                                        "{http.request.header.origin}"
+                                      ],
+                                      "Access-Control-Expose-Headers": [
+                                        "*"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "match": [
+                        {
+                          "header": {
+                            "Origin": [
+                              "https://packy.compiler.company"
+                            ]
+                          },
+                          "not": [
+                            {
+                              "method": [
+                                "OPTIONS"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "browse": {},
+                                  "handler": "file_server",
+                                  "hide": [
+                                    "/etc/caddy/Caddyfile"
+                                  ]
+                                }
+                              ],
+                              "match": [
+                                {
+                                  "method": [
+                                    "GET"
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "handle": [
+                                {
+                                  "handler": "webdav"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "terminal": true
+            },
+            {
+              "match": [
+                {
+                  "host": [
+                    "demo.compiler.company"
+                  ]
+                }
+              ],
+              "handle": [
+                {
+                  "handler": "subroute",
+                  "routes": [
+                    {
+                      "handle": [
+                        {
+                          "handler": "vars",
+                          "root": "/srv/http/demo.compiler.company"
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group25",
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "handler": "headers",
+                                  "response": {
+                                    "deferred": true,
+                                    "set": {
+                                      "Access-Control-Allow-Headers": [
+                                        "*"
+                                      ],
+                                      "Access-Control-Allow-Methods": [
+                                        "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+                                      ],
+                                      "Access-Control-Allow-Origin": [
+                                        "https://cdn.compiler.company"
+                                      ],
+                                      "Access-Control-Max-Age": [
+                                        "3600"
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "handler": "static_response",
+                                  "status_code": 204
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "match": [
+                        {
+                          "header": {
+                            "Origin": [
+                              "https://cdn.compiler.company"
+                            ]
+                          },
+                          "method": [
+                            "OPTIONS"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group25",
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "handler": "headers",
+                                  "response": {
+                                    "deferred": true,
+                                    "set": {
+                                      "Access-Control-Allow-Origin": [
+                                        "{http.request.header.origin}"
+                                      ],
+                                      "Access-Control-Expose-Headers": [
+                                        "*"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "match": [
+                        {
+                          "header": {
+                            "Origin": [
+                              "https://cdn.compiler.company"
+                            ]
+                          },
+                          "not": [
+                            {
+                              "method": [
+                                "OPTIONS"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "terminal": true
+            },
+            {
+              "match": [
+                {
+                  "host": [
+                    "cdn.compiler.company"
+                  ]
+                }
+              ],
+              "handle": [
+                {
+                  "handler": "subroute",
+                  "routes": [
+                    {
+                      "handle": [
+                        {
+                          "handler": "vars",
+                          "root": "/srv/http/cdn.compiler.company"
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group27",
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "handler": "headers",
+                                  "response": {
+                                    "deferred": true,
+                                    "set": {
+                                      "Access-Control-Allow-Headers": [
+                                        "*"
+                                      ],
+                                      "Access-Control-Allow-Methods": [
+                                        "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+                                      ],
+                                      "Access-Control-Allow-Origin": [
+                                        "*"
+                                      ],
+                                      "Access-Control-Max-Age": [
+                                        "3600"
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "handler": "static_response",
+                                  "status_code": 204
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "match": [
+                        {
+                          "header": {
+                            "Origin": [
+                              "*"
+                            ]
+                          },
+                          "method": [
+                            "OPTIONS"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group27",
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "handler": "headers",
+                                  "response": {
+                                    "deferred": true,
+                                    "set": {
+                                      "Access-Control-Allow-Origin": [
+                                        "{http.request.header.origin}"
+                                      ],
+                                      "Access-Control-Expose-Headers": [
+                                        "*"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "match": [
+                        {
+                          "header": {
+                            "Origin": [
+                              "*"
+                            ]
+                          },
+                          "not": [
+                            {
+                              "method": [
+                                "OPTIONS"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "browse": {},
+                                  "handler": "file_server",
+                                  "hide": [
+                                    "/etc/caddy/Caddyfile"
+                                  ]
+                                }
+                              ],
+                              "match": [
+                                {
+                                  "method": [
+                                    "GET"
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "handle": [
+                                {
+                                  "handler": "webdav"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "terminal": true
+            },
+            {
+              "match": [
+                {
+                  "host": [
+                    "the.compiler.company"
+                  ]
+                }
+              ],
+              "handle": [
+                {
+                  "handler": "subroute",
+                  "routes": [
+                    {
+                      "handle": [
+                        {
+                          "handler": "vars",
+                          "root": "/srv/http/the.compiler.company"
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group29",
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "handler": "headers",
+                                  "response": {
+                                    "deferred": true,
+                                    "set": {
+                                      "Access-Control-Allow-Headers": [
+                                        "*"
+                                      ],
+                                      "Access-Control-Allow-Methods": [
+                                        "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+                                      ],
+                                      "Access-Control-Allow-Origin": [
+                                        "https://cdn.compiler.company"
+                                      ],
+                                      "Access-Control-Max-Age": [
+                                        "3600"
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "handler": "static_response",
+                                  "status_code": 204
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "match": [
+                        {
+                          "header": {
+                            "Origin": [
+                              "https://cdn.compiler.company"
+                            ]
+                          },
+                          "method": [
+                            "OPTIONS"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group29",
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "handler": "headers",
+                                  "response": {
+                                    "deferred": true,
+                                    "set": {
+                                      "Access-Control-Allow-Origin": [
+                                        "{http.request.header.origin}"
+                                      ],
+                                      "Access-Control-Expose-Headers": [
+                                        "*"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "match": [
+                        {
+                          "header": {
+                            "Origin": [
+                              "https://cdn.compiler.company"
+                            ]
+                          },
+                          "not": [
+                            {
+                              "method": [
+                                "OPTIONS"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group29",
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "handler": "rewrite",
+                                  "uri": "{http.matchers.file.relative}"
+                                }
+                              ],
+                              "match": [
+                                {
+                                  "file": {
+                                    "try_files": [
+                                      "{http.request.uri.path}{http.request.uri.path}.html",
+                                      "{http.request.uri.path}/"
+                                    ]
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "handle": [
+                                {
+                                  "handler": "file_server",
+                                  "hide": [
+                                    "/etc/caddy/Caddyfile"
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "terminal": true
+            },
+            {
+              "match": [
+                {
+                  "host": [
+                    "hg.compiler.company"
+                  ]
+                }
+              ],
+              "handle": [
+                {
+                  "handler": "subroute",
+                  "routes": [
+                    {
+                      "group": "group31",
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "handler": "headers",
+                                  "response": {
+                                    "deferred": true,
+                                    "set": {
+                                      "Access-Control-Allow-Headers": [
+                                        "*"
+                                      ],
+                                      "Access-Control-Allow-Methods": [
+                                        "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+                                      ],
+                                      "Access-Control-Allow-Origin": [
+                                        "https://packy.compiler.company"
+                                      ],
+                                      "Access-Control-Max-Age": [
+                                        "3600"
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "handler": "static_response",
+                                  "status_code": 204
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "match": [
+                        {
+                          "header": {
+                            "Origin": [
+                              "https://packy.compiler.company"
+                            ]
+                          },
+                          "method": [
+                            "OPTIONS"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group31",
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "handler": "headers",
+                                  "response": {
+                                    "deferred": true,
+                                    "set": {
+                                      "Access-Control-Allow-Origin": [
+                                        "{http.request.header.origin}"
+                                      ],
+                                      "Access-Control-Expose-Headers": [
+                                        "*"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "match": [
+                        {
+                          "header": {
+                            "Origin": [
+                              "https://packy.compiler.company"
+                            ]
+                          },
+                          "not": [
+                            {
+                              "method": [
+                                "OPTIONS"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group31",
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "handler": "headers",
+                                  "response": {
+                                    "deferred": true,
+                                    "set": {
+                                      "Access-Control-Allow-Headers": [
+                                        "*"
+                                      ],
+                                      "Access-Control-Allow-Methods": [
+                                        "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+                                      ],
+                                      "Access-Control-Allow-Origin": [
+                                        "https://cdn.compiler.company"
+                                      ],
+                                      "Access-Control-Max-Age": [
+                                        "3600"
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "handler": "static_response",
+                                  "status_code": 204
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "match": [
+                        {
+                          "header": {
+                            "Origin": [
+                              "https://cdn.compiler.company"
+                            ]
+                          },
+                          "method": [
+                            "OPTIONS"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group31",
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "handler": "headers",
+                                  "response": {
+                                    "deferred": true,
+                                    "set": {
+                                      "Access-Control-Allow-Origin": [
+                                        "{http.request.header.origin}"
+                                      ],
+                                      "Access-Control-Expose-Headers": [
+                                        "*"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "match": [
+                        {
+                          "header": {
+                            "Origin": [
+                              "https://cdn.compiler.company"
+                            ]
+                          },
+                          "not": [
+                            {
+                              "method": [
+                                "OPTIONS"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group31",
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "handler": "headers",
+                                  "response": {
+                                    "deferred": true,
+                                    "set": {
+                                      "Access-Control-Allow-Headers": [
+                                        "*"
+                                      ],
+                                      "Access-Control-Allow-Methods": [
+                                        "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+                                      ],
+                                      "Access-Control-Allow-Origin": [
+                                        "https://vc.compiler.company"
+                                      ],
+                                      "Access-Control-Max-Age": [
+                                        "3600"
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "handler": "static_response",
+                                  "status_code": 204
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "match": [
+                        {
+                          "header": {
+                            "Origin": [
+                              "https://vc.compiler.company"
+                            ]
+                          },
+                          "method": [
+                            "OPTIONS"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group31",
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "handler": "headers",
+                                  "response": {
+                                    "deferred": true,
+                                    "set": {
+                                      "Access-Control-Allow-Origin": [
+                                        "{http.request.header.origin}"
+                                      ],
+                                      "Access-Control-Expose-Headers": [
+                                        "*"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "match": [
+                        {
+                          "header": {
+                            "Origin": [
+                              "https://vc.compiler.company"
+                            ]
+                          },
+                          "not": [
+                            {
+                              "method": [
+                                "OPTIONS"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "handle": [
+                        {
+                          "handler": "reverse_proxy",
+                          "upstreams": [
+                            {
+                              "dial": "rurik:8888"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "terminal": true
+            },
+            {
+              "match": [
+                {
+                  "host": [
+                    "compiler.company"
+                  ]
+                }
+              ],
+              "handle": [
+                {
+                  "handler": "subroute",
+                  "routes": [
+                    {
+                      "handle": [
+                        {
+                          "handler": "vars",
+                          "root": "/srv/http/compiler.company"
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group33",
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "handler": "headers",
+                                  "response": {
+                                    "deferred": true,
+                                    "set": {
+                                      "Access-Control-Allow-Headers": [
+                                        "*"
+                                      ],
+                                      "Access-Control-Allow-Methods": [
+                                        "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+                                      ],
+                                      "Access-Control-Allow-Origin": [
+                                        "https://cdn.compiler.company"
+                                      ],
+                                      "Access-Control-Max-Age": [
+                                        "3600"
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "handler": "static_response",
+                                  "status_code": 204
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "match": [
+                        {
+                          "header": {
+                            "Origin": [
+                              "https://cdn.compiler.company"
+                            ]
+                          },
+                          "method": [
+                            "OPTIONS"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group33",
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "handler": "headers",
+                                  "response": {
+                                    "deferred": true,
+                                    "set": {
+                                      "Access-Control-Allow-Origin": [
+                                        "{http.request.header.origin}"
+                                      ],
+                                      "Access-Control-Expose-Headers": [
+                                        "*"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "match": [
+                        {
+                          "header": {
+                            "Origin": [
+                              "https://cdn.compiler.company"
+                            ]
+                          },
+                          "not": [
+                            {
+                              "method": [
+                                "OPTIONS"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group33",
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "handler": "rewrite",
+                                  "uri": "{http.matchers.file.relative}"
+                                }
+                              ],
+                              "match": [
+                                {
+                                  "file": {
+                                    "try_files": [
+                                      "{http.request.uri.path}",
+                                      "{http.request.uri.path.html}",
+                                      "{http.request.uri.path}/"
+                                    ]
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "handle": [
+                                {
+                                  "handler": "file_server",
+                                  "hide": [
+                                    "/etc/caddy/Caddyfile"
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "terminal": true
+            }
+          ],
+          "logs": {
+            "logger_names": {
+              "cdn.compiler.company": [
+                "log0"
+              ],
+              "hg.compiler.company": [
+                "log3"
+              ],
+              "packy.compiler.company": [
+                "log2"
+              ]
+            },
+            "skip_hosts": [
+              "compiler.company",
+              "demo.compiler.company",
+              "the.compiler.company"
+            ]
+          }
+        },
+        "srv1": {
+          "listen": [
+            ":80"
+          ],
+          "enable_full_duplex": true,
+          "routes": [
+            {
+              "handle": [
+                {
+                  "handler": "vars",
+                  "root": "/srv/http/"
+                },
+                {
+                  "browse": {},
+                  "handler": "file_server",
+                  "hide": [
+                    "/etc/caddy/Caddyfile"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "srv2": {
+          "listen": [
+            ":8080"
+          ],
+          "enable_full_duplex": true,
+          "routes": [
+            {
+              "match": [
+                {
+                  "host": [
+                    "rurik"
+                  ]
+                }
+              ],
+              "handle": [
+                {
+                  "handler": "subroute",
+                  "routes": [
+                    {
+                      "handle": [
+                        {
+                          "handler": "vars",
+                          "root": "/mnt/m"
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group36",
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "handler": "headers",
+                                  "response": {
+                                    "deferred": true,
+                                    "set": {
+                                      "Access-Control-Allow-Headers": [
+                                        "*"
+                                      ],
+                                      "Access-Control-Allow-Methods": [
+                                        "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+                                      ],
+                                      "Access-Control-Allow-Origin": [
+                                        "*"
+                                      ],
+                                      "Access-Control-Max-Age": [
+                                        "3600"
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "handler": "static_response",
+                                  "status_code": 204
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "match": [
+                        {
+                          "header": {
+                            "Origin": [
+                              "*"
+                            ]
+                          },
+                          "method": [
+                            "OPTIONS"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "group": "group36",
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "handler": "headers",
+                                  "response": {
+                                    "deferred": true,
+                                    "set": {
+                                      "Access-Control-Allow-Origin": [
+                                        "{http.request.header.origin}"
+                                      ],
+                                      "Access-Control-Expose-Headers": [
+                                        "*"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "match": [
+                        {
+                          "header": {
+                            "Origin": [
+                              "*"
+                            ]
+                          },
+                          "not": [
+                            {
+                              "method": [
+                                "OPTIONS"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "handle": [
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "browse": {},
+                                  "handler": "file_server",
+                                  "hide": [
+                                    "/etc/caddy/Caddyfile"
+                                  ]
+                                }
+                              ],
+                              "match": [
+                                {
+                                  "method": [
+                                    "GET"
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "handle": [
+                                {
+                                  "handler": "webdav"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "terminal": true
+            }
+          ],
+          "automatic_https": {
+            "skip": [
+              "rurik"
+            ]
+          },
+          "logs": {
+            "logger_names": {
+              "rurik": [
+                "log1"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "tls": {
+      "automation": {
+        "policies": [
+          {
+            "subjects": [
+              "packy.compiler.company",
+              "demo.compiler.company",
+              "cdn.compiler.company",
+              "the.compiler.company",
+              "hg.compiler.company",
+              "compiler.company"
+            ],
+            "issuers": [
+              {
+                "email": "ellis@rwest.io",
+                "module": "acme"
+              },
+              {
+                "ca": "https://acme.zerossl.com/v2/DV90",
+                "email": "ellis@rwest.io",
+                "module": "acme"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
