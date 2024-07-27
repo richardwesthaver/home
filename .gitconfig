@@ -1,9 +1,0 @@
-[user]
-	name = cc
-	email = richard.westhaver@gmail.com
-[init]
-	defaultBranch = default
-[safe]
-        directory = /home/vc/src
-[credential]
-	helper = /usr/lib/git-core/git-credential-libsecret
