@@ -7,7 +7,7 @@
       "http_port": 80,
       "https_port": 443,
       "servers": {
-        "web": {
+        "0.0.0.0": {
           "automatic_https": {
             "disable": true
           },
