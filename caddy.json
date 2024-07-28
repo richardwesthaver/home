@@ -14,7 +14,7 @@
       },
       "log0": {
         "writer": {
-          "filename": "/var/log/caddy/caddy.log",
+          "filename": "/home/web/.stash/log/caddy/caddy.log",
           "output": "file"
         },
         "encoder": {
@@ -26,7 +26,7 @@
       },
       "log1": {
         "writer": {
-          "filename": "/var/log/caddy/caddy.log",
+          "filename": "/home/web/.stash/log/caddy/caddy.log",
           "output": "file"
         },
         "encoder": {
@@ -38,7 +38,7 @@
       },
       "log2": {
         "writer": {
-          "filename": "/var/log/caddy/caddy.log",
+          "filename": "/home/web/.stash/log/caddy/caddy.log",
           "output": "file"
         },
         "encoder": {
@@ -50,7 +50,7 @@
       },
       "log3": {
         "writer": {
-          "filename": "/var/log/caddy/caddy.log",
+          "filename": "/home/web/.stash/log/caddy/caddy.log",
           "output": "file"
         },
         "encoder": {
@@ -87,7 +87,7 @@
                       "handle": [
                         {
                           "handler": "vars",
-                          "root": "www/packy.compiler.company"
+                          "root": "/home/web/www/packy.compiler.company"
                         }
                       ]
                     },
@@ -240,7 +240,7 @@
                       "handle": [
                         {
                           "handler": "vars",
-                          "root": "www/demo.compiler.company"
+                          "root": "/home/web/www/demo.compiler.company"
                         }
                       ]
                     },
@@ -359,7 +359,7 @@
                       "handle": [
                         {
                           "handler": "vars",
-                          "root": "www/cdn.compiler.company"
+                          "root": "/home/web/www/cdn.compiler.company"
                         }
                       ]
                     },
@@ -512,7 +512,7 @@
                       "handle": [
                         {
                           "handler": "vars",
-                          "root": "www/the.compiler.company"
+                          "root": "/home/web/www/the.compiler.company"
                         }
                       ]
                     },
@@ -980,7 +980,7 @@
                       "handle": [
                         {
                           "handler": "vars",
-                          "root": "www/compiler.company"
+                          "root": "/home/web/www/compiler.company"
                         }
                       ]
                     },
@@ -1152,13 +1152,13 @@
               "handle": [
                 {
                   "handler": "vars",
-                  "root": "www"
+                  "root": "/home/web/www"
                 },
                 {
                   "browse": {},
                   "handler": "file_server",
                   "hide": [
-                    "/etc/caddy/Caddyfile"
+                    "/home/web/caddy.json"
                   ]
                 }
               ]
@@ -1175,7 +1175,7 @@
               "match": [
                 {
                   "host": [
-                    "rurik"
+                    "0.0.0.0"
                   ]
                 }
               ],
@@ -1187,7 +1187,7 @@
                       "handle": [
                         {
                           "handler": "vars",
-                          "root": "/mnt/m"
+                          "root": "/home/web/www"
                         }
                       ]
                     },
@@ -1296,7 +1296,7 @@
                                   "browse": {},
                                   "handler": "file_server",
                                   "hide": [
-                                    "/etc/caddy/Caddyfile"
+                                    "/home/web/caddy.json",
                                   ]
                                 }
                               ],
@@ -1326,13 +1326,11 @@
             }
           ],
           "automatic_https": {
-            "skip": [
-              "rurik"
-            ]
+            "disable": true
           },
           "logs": {
             "logger_names": {
-              "rurik": [
+              "0.0.0.0": [
                 "log1"
               ]
             }
