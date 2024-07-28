@@ -11,7 +11,7 @@
           "automatic_https": {
             "disable": true
           },
-          "listen": [ ":80" ],
+          "listen": [ ":8080" ],
           "routes": [
             {
               "handle": [
