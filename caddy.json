@@ -87,7 +87,7 @@
                       "handle": [
                         {
                           "handler": "vars",
-                          "root": "/srv/http/packy.compiler.company"
+                          "root": "www/packy.compiler.company"
                         }
                       ]
                     },
@@ -240,7 +240,7 @@
                       "handle": [
                         {
                           "handler": "vars",
-                          "root": "/srv/http/demo.compiler.company"
+                          "root": "www/demo.compiler.company"
                         }
                       ]
                     },
@@ -359,7 +359,7 @@
                       "handle": [
                         {
                           "handler": "vars",
-                          "root": "/srv/http/cdn.compiler.company"
+                          "root": "www/cdn.compiler.company"
                         }
                       ]
                     },
@@ -512,7 +512,7 @@
                       "handle": [
                         {
                           "handler": "vars",
-                          "root": "/srv/http/the.compiler.company"
+                          "root": "www/the.compiler.company"
                         }
                       ]
                     },
@@ -980,7 +980,7 @@
                       "handle": [
                         {
                           "handler": "vars",
-                          "root": "/srv/http/compiler.company"
+                          "root": "www/compiler.company"
                         }
                       ]
                     },
@@ -1152,7 +1152,7 @@
               "handle": [
                 {
                   "handler": "vars",
-                  "root": "/srv/http/"
+                  "root": "www"
                 },
                 {
                   "browse": {},
