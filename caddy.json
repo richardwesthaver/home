@@ -2,66 +2,6 @@
   "admin": {
     "listen": ":2020"
   },
-  "logging": {
-    "logs": {
-      "default": {
-        "exclude": [
-          "http.log.access.log0",
-          "http.log.access.log1",
-          "http.log.access.log2",
-          "http.log.access.log3"
-        ]
-      },
-      "log0": {
-        "writer": {
-          "filename": "/home/web/.stash/log/caddy/caddy.log",
-          "output": "file"
-        },
-        "encoder": {
-          "format": "json"
-        },
-        "include": [
-          "http.log.access.log0"
-        ]
-      },
-      "log1": {
-        "writer": {
-          "filename": "/home/web/.stash/log/caddy/caddy.log",
-          "output": "file"
-        },
-        "encoder": {
-          "format": "json"
-        },
-        "include": [
-          "http.log.access.log1"
-        ]
-      },
-      "log2": {
-        "writer": {
-          "filename": "/home/web/.stash/log/caddy/caddy.log",
-          "output": "file"
-        },
-        "encoder": {
-          "format": "json"
-        },
-        "include": [
-          "http.log.access.log2"
-        ]
-      },
-      "log3": {
-        "writer": {
-          "filename": "/home/web/.stash/log/caddy/caddy.log",
-          "output": "file"
-        },
-        "encoder": {
-          "format": "json"
-        },
-        "include": [
-          "http.log.access.log3"
-        ]
-      }
-    }
-  },
   "apps": {
     "http": {
       "servers": {
@@ -1142,33 +1082,6 @@
             ]
           }
         }
-      }
-    },
-    "tls": {
-      "automation": {
-        "policies": [
-          {
-            "subjects": [
-              "packy.compiler.company",
-              "demo.compiler.company",
-              "cdn.compiler.company",
-              "the.compiler.company",
-              "hg.compiler.company",
-              "compiler.company"
-            ],
-            "issuers": [
-              {
-                "email": "ellis@rwest.io",
-                "module": "acme"
-              },
-              {
-                "ca": "https://acme.zerossl.com/v2/DV90",
-                "email": "ellis@rwest.io",
-                "module": "acme"
-              }
-            ]
-          }
-        ]
       }
     }
   }
