@@ -1,0 +1,6 @@
+;;; -*- mode:skel; -*-
+:user worker
+:packy "~/.stash/packy"
+:wm nil
+:shell :bash
+:src "~/.stash/home/"
