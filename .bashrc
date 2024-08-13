@@ -1,6 +1,24 @@
 # .bashrc --- bash configuration 
 # Set prompt
 PS1="\u [\!]:\t:\w\n  >> \[\e[0m\]"
+
+export PYTHON=python3.11
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+export PATH="$HOME/go/bin:$HOME/.nimble/bin:$HOME/.cargo/bin:$HOME/.local/bin:$HOME/bin:$PATH"
+
+if ! shopt -oq posix; then
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+        . /usr/share/bash-completion/bash_completion
+    elif [ -f /etc/bash_completion ]; then
+        . /etc/bash_completion
+    fi
+fi
+
+eval "$(pyenv init --path)"
+if command -v rhg>>/dev/null; then alias hg='rhg';fi
+. "$HOME/.cargo/env"
+
 # default Envs
 export LISP='sbcl'
 export ESHELL='/usr/bin/bash'

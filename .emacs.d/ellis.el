@@ -1,4 +1,4 @@
-;;; ellis.el --- Richard's custom Emacs config -*- lexical-binding: t; -*-
+;;; ellis.el --- Richard's custom Emacs config
 
 ;; Copyright (C) 2024
 
@@ -562,18 +562,22 @@ EXT is a list of the extensions of files to be included."
      files)
     files))
 
-(defvar org-agenda-directories (list org-directory user-lab-directory)
+(defvar org-agenda-directories (list org-directory
+                                     (join-paths user-lab-directory "org")
+                                     (join-paths company-source-directory "org/*"))
   "List of directories containing org files.")
 (defvar org-agenda-extensions '(".org")
   "List of extensions of agenda files")
 
 (defun org-set-agenda-files ()
   (interactive)
-  (setq org-agenda-files (org-list-files
-                          org-agenda-directories
-                          org-agenda-extensions)))
+  (setq org-agenda-files
+        (org-list-files
+         org-agenda-directories
+         org-agenda-extensions)))
 
-(add-hook 'after-init-hook 'org-set-agenda-files)
+(with-eval-after-load 'org
+  (org-set-agenda-files))
 
 ;;; Skel Config
 (use-package skel
@@ -733,6 +737,19 @@ prefix or replace it.")
   (skt-register-auto-insert ".*[.].rs" #'skt-template-rust-head)
   (auto-insert-mode t)
   (keymap-set skel-minor-mode-map "C-<return>" 'company-tempo))
+
+;;; dictionary
+;; requires dictd server running
+(setq dictionary-server "compiler.company")
+;;; ispell
+;; requires aspell and a hunspell dictionary (hunspell-en_us)
+(setq-default ispell-program-name "aspell")
+(add-hook 'mail-send-hook  #'ispell-message)
+;;; glossary
+(with-eval-after-load 'org-glossary
+  (setq org-glossary-collection-root (join-paths company-source-directory "org/meta/"))
+  (cl-pushnew '("Terms" . glossary) org-glossary-headings)
+  (cl-pushnew '("Acronyms" . acronym) org-glossary-headings))
 
 (provide 'ellis)
 ;;; ellis.el ends here
