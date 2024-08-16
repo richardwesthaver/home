@@ -1,4 +1,4 @@
-;;; ellis.el --- Richard's custom Emacs config
+;;; ellis.el --- Richard's custom Emacs config -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2024
 
@@ -30,7 +30,7 @@
 
 (defalias 'make #'compile)
 
-(setopt default-theme 'modus-vivendi-tritanopia
+(setopt default-theme 'ef-dream
         user-lab-directory (join-paths user-home-directory "lab")
         company-source-directory (join-paths user-home-directory "comp"))
 
@@ -563,8 +563,9 @@ EXT is a list of the extensions of files to be included."
     files))
 
 (defvar org-agenda-directories (list org-directory
-                                     (join-paths user-lab-directory "org")
-                                     (join-paths company-source-directory "org/*"))
+                                     ;; (join-paths user-lab-directory "org")
+                                     (join-paths company-source-directory "org/*")
+                                     (join-paths company-source-directory "org/*/*"))
   "List of directories containing org files.")
 (defvar org-agenda-extensions '(".org")
   "List of extensions of agenda files")
@@ -572,9 +573,12 @@ EXT is a list of the extensions of files to be included."
 (defun org-set-agenda-files ()
   (interactive)
   (setq org-agenda-files
+        (cl-remove-if (lambda (x) (or
+                                   (string= "archive.org" (file-name-nondirectory x))
+                                   (string= "archive" (file-name-directory x))))
         (org-list-files
          org-agenda-directories
-         org-agenda-extensions)))
+         org-agenda-extensions))))
 
 (with-eval-after-load 'org
   (org-set-agenda-files))
