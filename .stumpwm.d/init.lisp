@@ -2,13 +2,7 @@
 
 (in-package :stumpwm)
 
-;; (ql:quickload :swank)
-;; (require :swank)
-
-;; (defvar *stumpwm-port* 4040)
-;; (swank-loader:init)
-;; (swank:create-server :port *stumpwm-port*
-;;                      :style swank:*communication-style*)
+(stumpwm:set-prefix-key (kbd "s-SPC"))
 
 (defcommand load-std () ()
   (ql:quickload :std))
@@ -26,9 +20,22 @@
       *float-window-modifier* :SUPER
       *startup-message* "Greetings, stranger.")
 
-(set-font "-*-terminal")
-(set-module-dir "/usr/share/stupmwm/contrib/")
+(set-module-dir "~/.stumpwm.d/contrib")
 (init-load-path *module-dir*)
+
+(ql:quickload :clx-truetype)
+(load-module "ttf-fonts")
+(xft:cache-fonts)
+(set-font (make-instance 'xft:font
+            :family "Mononoki Nerd Font"
+            :subfamily "Regular"
+            :size 12))
+
+(load-module "swm-golden-ratio")
+(unless swm-golden-ratio:*golden-ratio-on*
+  (swm-golden-ratio:toggle-golden-ratio))
+
+(load-module "stumptray")
 
 (set-fg-color "#ffffff")
 (set-bg-color "#000000")
@@ -60,15 +67,15 @@
 (set-transient-gravity :center)
 (setf *time-modeline-string* "%a %b %e %k:%M")
 
-(setq *mode-line-timeout* 4)
-(which-key-mode)
+(setq *mode-line-timeout* 4)(
+which-key-mode)
 
 (when *initializing*
   (run-shell-command "sh ~/.fehbg")
   (when (equal (machine-instance) "zor")
     (run-shell-command "sh ~/.screenlayout/default.sh"))
-  (dolist (s stumpwm:*screen-list*) 
-    (enable-mode-line s (car (screen-heads s)) t)))
+  (dolist (h (screen-heads (current-screen)))
+    (enable-mode-line (current-screen) h t)))
 
 (defcommand term (&optional program) ()
   (sb-thread:make-thread
@@ -86,5 +93,8 @@
   (sb-thread:make-thread
    (lambda ()
      (run-shell-command "chromium"))))
+
+(defcommand emacsclient () ()
+  (run-shell-command "emacsclient -c -a="))
 
 (define-key *root-map* (kbd "c") "term")

@@ -1,4 +1,4 @@
-;;; ellis.el --- Richard's custom Emacs config -*- lexical-binding: t -*-
+;;; ellis.el --- user Emacs config -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2024
 
@@ -81,12 +81,15 @@
 (keymap-set minibuffer-local-map "C-<tab>" #'hippie-expand)
 (keymap-set ctl-x-x-map "p p" #'remember-project)
 (keymap-set ctl-x-x-map "p l" #'remember-lab-projects)
+(keymap-set ctl-x-x-map "p c" #'remember-comp-projects)
 
 (add-hook 'prog-mode-hook #'skel-minor-mode)
 (add-hook 'org-mode-hook #'skel-minor-mode)
 ;; (add-hook 'prog-mode-hook #'company-mode)
 
 (add-hook 'notmuch-message-mode-hook #'turn-on-orgtbl)
+(
+ouse-package ef-themes :ensure t)
 
 (use-package markdown-mode :ensure t)
 
@@ -742,18 +745,11 @@ prefix or replace it.")
   (auto-insert-mode t)
   (keymap-set skel-minor-mode-map "C-<return>" 'company-tempo))
 
-;;; dictionary
-;; requires dictd server running
-(setq dictionary-server "compiler.company")
-;;; ispell
-;; requires aspell and a hunspell dictionary (hunspell-en_us)
-(setq-default ispell-program-name "aspell")
-(add-hook 'mail-send-hook  #'ispell-message)
 ;;; glossary
-(with-eval-after-load 'org-glossary
-  (setq org-glossary-collection-root (join-paths company-source-directory "org/meta/"))
-  (cl-pushnew '("Terms" . glossary) org-glossary-headings)
-  (cl-pushnew '("Acronyms" . acronym) org-glossary-headings))
+;; (with-eval-after-load 'org-glossary
+;;   (setq org-glossary-collection-root (join-paths company-source-directory "org/meta/"))
+;;   (cl-pushnew '("Terms" . glossary) org-glossary-headings)
+;;   (cl-pushnew '("Acronyms" . acronym) org-glossary-headings))
 
 (provide 'ellis)
-;;; ellis.el ends here
+;; ellis.el ends here
