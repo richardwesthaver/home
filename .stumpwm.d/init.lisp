@@ -98,3 +98,6 @@ which-key-mode)
   (run-shell-command "emacsclient -c -a="))
 
 (define-key *root-map* (kbd "c") "term")
+(define-key *root-map* (kbd "e") "emacsclient")
+(define-key *root-map* (kbd "C-e") "emacs")
+(define-key *root-map* (kbd "s-w") "chromium")
