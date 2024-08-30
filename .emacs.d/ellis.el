@@ -30,11 +30,9 @@
 
 (defalias 'make #'compile)
 
-(setopt default-theme 'ef-dream
+(setq default-theme 'ef-dark
         user-lab-directory (join-paths user-home-directory "lab")
         company-source-directory (join-paths user-home-directory "comp"))
-
-;; (unless (display-graphic-p) (setq default-theme 'wheatgrass))
 
 (when (linux-p) (setq dired-listing-switches "-alsh"))
 
@@ -88,8 +86,8 @@
 ;; (add-hook 'prog-mode-hook #'company-mode)
 
 (add-hook 'notmuch-message-mode-hook #'turn-on-orgtbl)
-(
-ouse-package ef-themes :ensure t)
+
+(use-package ef-themes :ensure t)
 
 (use-package markdown-mode :ensure t)
 
@@ -240,9 +238,10 @@ ouse-package ef-themes :ensure t)
 (use-package sh-script
   :hook (sh-mode . flymake-mode))
 
+;;; Diary
+(setq diary-list-include-blanks t)
 ;;; Org Config
 (setq publish-dir "/ssh:rurik:/srv/http/compiler.company")
-(keymap-set user-map "t" #'org-todo)
 
 ;; populate org-babel
 (org-babel-do-load-languages
@@ -261,6 +260,20 @@ ouse-package ef-themes :ensure t)
 			     (python . t)
 			     (lua . t)
 			     (lilypond . t)))
+
+;; timeline
+(use-package org-timeline
+  :load-path user-emacs-lib-directory
+  :hook (org-agenda-finalize . org-timeline-insert-timeline)
+  :init
+  (setq
+   org-timeline-insert-before-text "›"
+   org-timeline-beginning-of-day-hour 8
+   org-timeline-keep-elapsed 2
+   org-timeline-start-hour 5
+   org-timeline-show-text-in-blocks t
+   org-timeline-prepend t))
+
 ;;; IRC
 (setq erc-format-nick-function 'erc-format-@nick)
 
@@ -565,23 +578,21 @@ EXT is a list of the extensions of files to be included."
      files)
     files))
 
-(defvar org-agenda-directories (list org-directory
-                                     ;; (join-paths user-lab-directory "org")
-                                     (join-paths company-source-directory "org/*")
-                                     (join-paths company-source-directory "org/*/*"))
+(defvar org-agenda-directories (list (join-paths company-source-directory "org/plan")
+                                     (join-paths company-source-directory "org/plan/tasks"))
   "List of directories containing org files.")
+
 (defvar org-agenda-extensions '(".org")
   "List of extensions of agenda files")
 
 (defun org-set-agenda-files ()
   (interactive)
   (setq org-agenda-files
-        (cl-remove-if (lambda (x) (or
-                                   (string= "archive.org" (file-name-nondirectory x))
-                                   (string= "archive" (file-name-directory x))))
-        (org-list-files
-         org-agenda-directories
-         org-agenda-extensions))))
+        (cons org-inbox-file
+              (cl-remove-if (lambda (x) (string= "readme.org" (file-name-nondirectory x)))
+                            (org-list-files
+                             org-agenda-directories
+                             org-agenda-extensions)))))
 
 (with-eval-after-load 'org
   (org-set-agenda-files))
@@ -750,6 +761,33 @@ prefix or replace it.")
 ;;   (setq org-glossary-collection-root (join-paths company-source-directory "org/meta/"))
 ;;   (cl-pushnew '("Terms" . glossary) org-glossary-headings)
 ;;   (cl-pushnew '("Acronyms" . acronym) org-glossary-headings))
+
+;;; Calc
+(setq calc-highlight-selections-with-faces t)
+(cl-pushnew '(lisp-mode "#| " "|#
+") calc-embedded-open-close-mode-alist)
+(cl-pushnew '(emacs-lisp-mode ";; " "
+") calc-embedded-open-close-mode-alist)
+
+(defun calc-eval-region (arg beg end)
+  "Calculate the region and display the result in the echo area.
+With prefix ARG non-nil, insert the result at the end of region."
+  (interactive "P\nr")
+  (let* ((expr (buffer-substring-no-properties beg end))
+         (result (calc-eval expr)))
+    (if (null arg)
+        (message "%s = %s" expr result)
+      (goto-char end)
+      (save-excursion
+        (insert result)))))
+
+(defun calc-embedded-formula-to-stack ()
+  (interactive)
+  (save-excursion
+    (save-match-data
+     (calc-embedded-find-bounds)))
+  (let ((eq-str (buffer-substring calc-embed-top calc-embed-bot)))
+    (calc-eval eq-str 'push)))
 
 (provide 'ellis)
 ;; ellis.el ends here
