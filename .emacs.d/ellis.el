@@ -112,12 +112,12 @@
    notmuch-show-logo nil
    notmuch-search-oldest-first nil
    notmuch-hello-hide-tags '("kill")
-   notmuch-saved-searches '((:name "inbox" :query "tag:inbox" :key "i")
-                            (:name "unread" :query "tag:unread" :key "u")
+   notmuch-saved-searches '((:name "unread" :query "tag:unread" :key "u")
+                            (:name "inbox" :query "tag:inbox" :key "i")
                             (:name "new" :query "tag:new" :key "n")
-                            (:name "sent" :query "tag:sent" :key "e")
                             (:name "drafts" :query "tag:draft" :key "d")
-                            (:name "all mail" :query "*" :key "a")
+                            (:name "sent" :query "tag:sent" :key "e")
+                            (:name "all" :query "*" :key "a")
                             (:name "todo" :query "tag:todo" :key "t")))
   :config
   ;;;###autoload
@@ -187,8 +187,6 @@
     ("http://arxiv.org/rss/econ" econ rnd)
     ;; John Wiegley
     ("http://newartisans.com/rss.xml" dev blog)
-    ;; comp
-    ;; ("https://lab.rwest.io/comp.atom?feed_token=pHu9qwLkjy4CWJHx9rrJ" comp vc)
     ("https://www.reddit.com/r/listentothis/.rss" music reddit)
     ("https://www.ftc.gov/feeds/press-release-consumer-protection.xml" gov ftc)
     ("https://api2.fcc.gov/edocs/public/api/v1/rss/" gov fcc)
@@ -269,10 +267,11 @@
   (setq
    org-timeline-insert-before-text "›"
    org-timeline-beginning-of-day-hour 8
+   org-timeline-default-duration 30
    org-timeline-keep-elapsed 2
-   org-timeline-start-hour 5
+   org-timeline-start-hour 8
    org-timeline-show-text-in-blocks t
-   org-timeline-prepend t))
+   org-timeline-prepend nil))
 
 ;;; IRC
 (setq erc-format-nick-function 'erc-format-@nick)
@@ -339,7 +338,7 @@ of its arguments."
       (while (< (point) end)
         (cond
          ;; Ignore comments.
-         ((or (org-in-commented-line) (org-at-table-p))
+         ((or (org-at-comment-p) (org-at-table-p))
           nil)
          ;; Ignore hyperlinks. But if link has a description, count
          ;; the words within the description.
@@ -353,7 +352,7 @@ of its arguments."
          ((looking-at org-any-link-re)
           (goto-char (match-end 0)))
          ;; Ignore source code blocks.
-         ((org-in-regexps-block-p "^#\\+BEGIN_SRC\\W" "^#\\+END_SRC\\W")
+         ((org-between-regexps-p "^#\\+BEGIN_SRC\\W" "^#\\+END_SRC\\W")
           nil)
          ;; Ignore inline source blocks, counting them as 1 word.
          ((save-excursion
@@ -393,8 +392,8 @@ of its arguments."
              (t
               (cl-incf wc))))))
         (re-search-forward "\\w+\\W*")))
-    (message (format "%d words in %s." wc
-                     (if mark-active "region" "buffer")))))
+    (format "%d words in %s." wc
+            (if mark-active "region" "buffer"))))
 
 (defun org-check-misformatted-subtree ()
   "Check misformatted entries in the current buffer."
@@ -505,15 +504,15 @@ the result as a time value."
 
 (require 'mm-url) ; to include mm-url-decode-entities-string
 
-(defun org-insert-link-with-title ()
-  "Insert org link where default description is set to html title."
-  (interactive)
-  (let* ((url (read-string "URL: "))
-         (title (get-html-title-from-url url)))
-    (org-insert-link nil url title)))
+(cl-defun get-first-url (&optional (match (rx bol "http" (optional "s") "://")))
+  "Return URL in clipboard, or first URL in the `kill-ring' matching MATCH."
+  (cl-loop for item in (cons (current-kill 0) kill-ring)
+           when (and item (string-match-p match item))
+           return item))
 
 (defun get-html-title-from-url (url)
   "Return content in <title> tag."
+  (interactive (list (get-first-url)))
   (let (x1 x2 (download-buffer (url-retrieve-synchronously url)))
     (save-excursion
       (set-buffer download-buffer)
@@ -522,6 +521,17 @@ the result as a time value."
       (search-forward "</title>")
       (setq x2 (search-backward "<"))
       (mm-url-decode-entities-string (buffer-substring-no-properties x1 x2)))))
+
+(defun org-insert-link-with-title (url)
+  "Insert org link where default description is set to html title."
+  (interactive (list (get-first-url match)))
+  (let ((title (get-html-title-from-url url)))
+    (org-insert-link nil url title)))
+
+(defun org-insert-so-link (url)
+  (interactive (list (get-first-url (rx bol "https://" (* anychar) "stackoverflow.com"))))
+  (let ((title (get-html-title-from-url url)))
+    (org-insert-link nil url title)))
 
 (defun org-remove-empty-propert-drawers ()
   "*Remove all empty property drawers in current file."
@@ -585,6 +595,8 @@ EXT is a list of the extensions of files to be included."
 (defvar org-agenda-extensions '(".org")
   "List of extensions of agenda files")
 
+(setq org-agenda-default-appointment-duration 30)
+(setq org-agenda-span 5)
 (defun org-set-agenda-files ()
   (interactive)
   (setq org-agenda-files
@@ -596,6 +608,28 @@ EXT is a list of the extensions of files to be included."
 
 (with-eval-after-load 'org
   (org-set-agenda-files))
+
+;; org-agenda-auto-update
+(defvar org-agenda-update-interval 300)
+(defvar org-agenda-update-timer nil)
+(defvar org-agenda-update-idle t)
+
+(defun org-agenda-update ()
+  (org-agenda-redo-all t))
+
+(defun org-agenda-auto-update ()
+  (when org-agenda-update-timer
+    (setq org-agenda-update-timer
+          (cancel-timer org-agenda-update-timer)))
+  (setq org-agenda-update-timer
+        (if org-agenda-update-idle
+            (run-with-idle-timer org-agenda-update-interval t 'org-agenda-update)
+          ;; when we refresh the org-agenda buffer, also reset the timer
+          (add-hook 'org-agenda-finalize-hook 'org-agenda-auto-update)
+          (run-with-timer org-agenda-update-interval org-agenda-update-interval 'org-agenda-update))))
+
+(with-eval-after-load 'org-agenda
+  (org-agenda-auto-update))
 
 ;;; Skel Config
 (use-package skel
@@ -754,7 +788,15 @@ prefix or replace it.")
   (skt-register-auto-insert ".*[.]lisp" #'skt-template-lisp-head)
   (skt-register-auto-insert ".*[.].rs" #'skt-template-rust-head)
   (auto-insert-mode t)
-  (keymap-set skel-minor-mode-map "C-<return>" 'company-tempo))
+  ;; (keymap-set skel-minor-mode-map "C-<return>" 'company-tempo)
+  )
+
+;;; ical2org
+;; go install github.com/rjhorniii/ical2org@latest
+(defun ical2org (file)
+  "Convert ics FILE to an org-mode heading."
+  (interactive "ffile: ")
+  (shell-command (format "ical2org %s -a %s" file org-inbox-file)))
 
 ;;; glossary
 ;; (with-eval-after-load 'org-glossary

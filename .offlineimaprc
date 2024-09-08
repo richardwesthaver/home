@@ -1,5 +1,6 @@
 [general]
-accounts = ellis, demon, postmaster
+accounts = ellis, demon
+# postmaster
 pythonfile = ~/.config/offlineimap/get_pass.py
 
 [Account ellis]
@@ -47,26 +48,26 @@ sslcacertfile = /etc/ssl/certs/ca-certificates.crt
 folderfilter = lambda foldername: foldername in ['[Gmail]/All Mail']
 nametrans = lambda foldername: re.sub('^\[Gmail\]/All Mail$', 'all',foldername)
 
-[Account postmaster]
-synclabels = yes
-localrepository = postmaster
-remoterepository = postmaster-imap
-postsynchook = ~/.config/offlineimap/postsync.sh
+# [Account postmaster]
+# synclabels = yes
+# localrepository = postmaster
+# remoterepository = postmaster-imap
+# postsynchook = ~/.config/offlineimap/postsync.sh
 
-[Repository postmaster]
-type = Maildir
-localfolders = ~/mail/postmaster
+# [Repository postmaster]
+# type = Maildir
+# localfolders = ~/mail/postmaster
 
-[Repository postmaster-imap]
-type = IMAP
-remotepasseval = get_authinfo_password("mail.compiler.company", "postmaster", 993)
-remotehost = mail.compiler.company
-remoteuser = postmaster@compiler.company
-# Necessary to work around https://github.com/OfflineIMAP/offlineimap/issues/573 (versions 7.0.12, 7.2.1)
-# macos only
-#sslcacertfile = /opt/local/etc/openssl/cert.pem
-#ssl_version = tls1_2
-# linux only
-sslcacertfile = /etc/ssl/certs/ca-certificates.crt
-#folderfilter = lambda foldername: foldername in ['[Gmail]/All Mail']
-#nametrans = lambda foldername: re.sub('^\[Gmail\]/All Mail$', 'all',foldername)
+# [Repository postmaster-imap]
+# type = IMAP
+# remotepasseval = get_authinfo_password("mail.compiler.company", "postmaster", 993)
+# remotehost = mail.compiler.company
+# remoteuser = postmaster@compiler.company
+# # Necessary to work around https://github.com/OfflineIMAP/offlineimap/issues/573 (versions 7.0.12, 7.2.1)
+# # macos only
+# #sslcacertfile = /opt/local/etc/openssl/cert.pem
+# #ssl_version = tls1_2
+# # linux only
+# sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+# #folderfilter = lambda foldername: foldername in ['[Gmail]/All Mail']
+# #nametrans = lambda foldername: re.sub('^\[Gmail\]/All Mail$', 'all',foldername)

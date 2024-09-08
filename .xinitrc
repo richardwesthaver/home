@@ -2,6 +2,7 @@
 xrdb .Xresources &
 xset r rate 200 40 &
 xset s off -dpms &
+systemctl --user import-environment DISPLAY
 case $session in
   sway              ) exec sway;;
   stumpwm           ) /usr/local/bin/stumpwm;;

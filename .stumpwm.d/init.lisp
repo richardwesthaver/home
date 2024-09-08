@@ -5,7 +5,12 @@
 (stumpwm:set-prefix-key (kbd "s-SPC"))
 
 (ignore-errors
- (ql:quickload '(:std :core :prelude :user)))
+ (ql:quickload '(:std :core :prelude :user :swank)))
+
+(defcommand quickload (system)
+  ((:rest "System: "))
+  "Load a system with QL:QUICKLOAD"
+  (ql:quickload system))
 
 (defcommand load-std () ()
   (ql:quickload :std))
@@ -39,7 +44,7 @@
 (unless swm-golden-ratio:*golden-ratio-on*
   (swm-golden-ratio:toggle-golden-ratio))
 
-;; (load-module "stumptray")
+(load-module "screenshot")
 (load-module "cpu")
 (load-module "hostname")
 (load-module "mpd")
@@ -51,8 +56,6 @@
 
 (ql:quickload :xml-emitter)
 (ql:quickload :dbus)
-(load-module "notify")
-(notify:notify-server-toggle)
 
 (set-fg-color "#ffffff")
 (set-bg-color "#000000")
