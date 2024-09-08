@@ -5,4 +5,4 @@
 :shell :bash
 :browser "eww"
 :editor :emacs
-:src "~/comp/home/"
+:src "~/.stash/home/"
