@@ -2,19 +2,11 @@
 # cgit config
 #
 
-css=/cgit.css
-logo=/cgit.png
-
-# Following lines work with the above Apache config
-#css=/cgit-css/cgit.css
-#logo=/cgit-css/cgit.png
-
-# Following lines work with the above Lighttpd config
-#css=/cgit/cgit.css
-#logo=/cgit/cgit.png
+css=/assets/cgit.css
+logo=/assets/cgit.png
 
 # Allow http transport git clone
-#enable-http-clone=0
+enable-http-clone=1
 
 
 # if you do not want that webcrawler (like google) index your site
