@@ -1,4 +1,4 @@
-;;; mq.el --- Emacs support for Mercurial Queues
+;;; mq.el --- Emacs support for Mercurial Queues -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2006 Bryan O'Sullivan
 
@@ -14,13 +14,12 @@
 ;; General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with mq.el, GNU Emacs, or XEmacs; see the file COPYING (`C-h
+;; along with mq.el or GNU Emacs; see the file COPYING (`C-h
 ;; C-l').  If not, see <http://www.gnu.org/licenses/>.
 
-(eval-when-compile (require 'cl))
+;;; Code:
 (require 'mercurial)
 
-
 (defcustom mq-mode-hook nil
   "Hook run when a buffer enters mq-mode."
   :type 'sexp
@@ -65,7 +64,7 @@
 (defvar mq-top nil)
 (make-variable-buffer-local 'mq-top)
 (put 'mq-top 'permanent-local t)
-
+
 ;;; Global keymap.
 
 (defvar mq-global-map
@@ -89,9 +88,7 @@
 
 (add-minor-mode 'mq-mode 'mq-mode)
 
-
 ;;; Refresh edit mode keymap.
-
 (defvar mq-edit-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map "\C-c\C-c" 'mq-edit-finish)
@@ -99,9 +96,7 @@
     (define-key map "\C-c\C-s" 'mq-signoff)
     map))
 
-
 ;;; Helper functions.
-
 (defun mq-read-patch-name (&optional source prompt force)
   "Read a patch name to use with a command.
 May return nil, meaning \"use the default\"."
@@ -378,7 +373,7 @@ With a prefix argument, display a git-compatible diff."
 	(call-process (hg-binary) nil t nil "qdiff" "--git")
     (call-process (hg-binary) nil t nil "qdiff"))
     (diff-mode)
-    (font-lock-fontify-buffer)))
+    (font-lock-ensure)))
 
 (defun mq-signoff ()
   "Sign off on the current patch, in the style used by the Linux kernel.
@@ -408,10 +403,5 @@ the value of the ui.username item from your hgrc will be used."
 	  (mq-edit-finish)
 	(mq-edit-kill)))))
 
-
 (provide 'mq)
-
-
-;;; Local Variables:
-;;; prompt-to-byte-compile: nil
-;;; end:
+;; mq.el ends here

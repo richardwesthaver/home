@@ -31,8 +31,8 @@
 (defalias 'make #'compile)
 
 (setq default-theme 'ef-dark
-        user-lab-directory (join-paths user-home-directory "lab")
-        company-source-directory (join-paths user-home-directory "comp"))
+      user-lab-directory (join-paths user-home-directory "lab")
+      company-source-directory (join-paths user-home-directory "comp"))
 
 (when (linux-p) (setq dired-listing-switches "-alsh"))
 
@@ -219,11 +219,11 @@
   ;; (elfeed-tube-setup)
   (elfeed-tube-add-feeds '("detroit techno" "boiler room dj" "brad mehldau" "chris 'daddy' dave"))
   :bind (:map elfeed-show-mode-map
-         ("F" . elfeed-tube-fetch)
-         ([remap save-buffer] . elfeed-tube-save)
-         :map elfeed-search-mode-map
-         ("F" . elfeed-tube-fetch)
-         ([remap save-buffer] . elfeed-tube-save)))
+              ("F" . elfeed-tube-fetch)
+              ([remap save-buffer] . elfeed-tube-save)
+              :map elfeed-search-mode-map
+              ("F" . elfeed-tube-fetch)
+              ([remap save-buffer] . elfeed-tube-save)))
 
 (use-package elfeed-tube-mpv
   :ensure t
@@ -302,8 +302,10 @@
 -o TAGS")))
 
 (unless (string-equal "hyde"  system-name)
-  (add-hook 'dired-mode-hook #'all-the-icons-dired-mode)
-  (add-hook 'ibuffer-mode-hook #'all-the-icons-ibuffer-mode))
+  (add-hook 'dired-mode-hook #'nerd-icons-dired-mode)
+  (add-hook 'ibuffer-mode-hook #'nerd-icons-ibuffer-mode)
+  (nerd-icons-completion-mode)
+  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
 ;; strangerdanger
 ;; (setq slime-enable-evaluate-in-emacs t)
@@ -595,7 +597,7 @@ EXT is a list of the extensions of files to be included."
 (defvar org-agenda-extensions '(".org")
   "List of extensions of agenda files")
 
-(setq org-agenda-default-appointment-duration 30)
+;; (setq org-agenda-default-appointment-duration nil)
 (setq org-agenda-span 5)
 (defun org-set-agenda-files ()
   (interactive)
@@ -606,8 +608,25 @@ EXT is a list of the extensions of files to be included."
                              org-agenda-directories
                              org-agenda-extensions)))))
 
+(defun org-set-refile-targets ()
+  (interactive)
+  (setq org-refile-targets
+        `((,(cl-remove-if 
+             (lambda (x) (string= "readme.org" (file-name-nondirectory x)))
+             (org-list-files
+              (list company-org-directory org-directory
+                    (join-paths company-org-directory "notes*")
+                    (join-paths company-org-directory "plan*")
+                    (join-paths company-org-directory "docs*")
+                    (join-paths company-org-directory "blog*")
+                    (join-paths company-org-directory "meta*"))
+               org-agenda-extensions))
+           . (:maxlevel . 3))
+          (nil . (:level . 5)))))
+
 (with-eval-after-load 'org
-  (org-set-agenda-files))
+  (org-set-agenda-files)
+  (org-set-refile-targets))
 
 ;; org-agenda-auto-update
 (defvar org-agenda-update-interval 300)
@@ -827,7 +846,7 @@ With prefix ARG non-nil, insert the result at the end of region."
   (interactive)
   (save-excursion
     (save-match-data
-     (calc-embedded-find-bounds)))
+      (calc-embedded-find-bounds)))
   (let ((eq-str (buffer-substring calc-embed-top calc-embed-bot)))
     (calc-eval eq-str 'push)))
 

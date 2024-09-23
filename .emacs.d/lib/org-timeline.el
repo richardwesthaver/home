@@ -616,7 +616,6 @@ See the documentation of `org-timeline-keep-elapsed' for more information."
                                     "|"))))
          (tasks (org-timeline--list-tasks))
          (today (calendar-absolute-from-gregorian (calendar-current-date)))
-         (today-onlyp (eq 0 (length (delq nil (mapcar (lambda (task) (if (eq (org-timeline-task-day task) today) nil task)) tasks)))))
          (today-or-tomorrow-only-p (eq 0 (length (delq nil (mapcar (lambda (task) (if (member (org-timeline-task-day task) `(,today ,(+ today 1))) nil task)) tasks))))))
     (with-temp-buffer
       (insert hourline)

@@ -39,8 +39,9 @@ eman() {
 }
 
 eww() {
- emacsclient -t -e '(eww-browse-url "'"$1"'")' -a=
+ emacsclient -t -e "(eww-browse-url \"$1\")" -a=
 }
+
 alias em='emacsclient -a='
 alias ec='emacsclient -c -a='
 alias et='emacsclient -t -a='

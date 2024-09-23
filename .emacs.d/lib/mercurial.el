@@ -1,4 +1,4 @@
-;;; mercurial.el --- Emacs support for the Mercurial distributed SCM
+;;; mercurial.el --- Emacs support for the Mercurial distributed SCM -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2005, 2006 Bryan O'Sullivan
 
@@ -41,35 +41,14 @@
 
 ;; Please send problem reports and suggestions to bos@serpentine.com.
 
-
 ;;; Code:
-
-(eval-when-compile (require 'cl))
 (require 'diff-mode)
 (require 'easymenu)
 (require 'executable)
 (require 'vc)
+(require 'view)
 
-(defmacro hg-feature-cond (&rest clauses)
-  "Test CLAUSES for feature at compile time.
-Each clause is (FEATURE BODY...)."
-  (dolist (x clauses)
-    (let ((feature (car x))
-	  (body (cdr x)))
-      (when (or (eq feature t)
-		(featurep feature))
-	(return (cons 'progn body))))))
-
-
-;;; XEmacs has view-less, while GNU Emacs has view.  Joy.
-
-(hg-feature-cond
- (xemacs (require 'view-less))
- (t (require 'view)))
-
-
 ;;; Variables accessible through the custom system.
-
 (defgroup mercurial nil
   "Mercurial distributed SCM."
   :group 'tools)
@@ -78,7 +57,7 @@ Each clause is (FEATURE BODY...)."
     (or (executable-find "hg")
 	(dolist (path '("~/bin/hg" "/usr/bin/hg" "/usr/local/bin/hg"))
 	  (when (file-executable-p path)
-	    (return path))))
+	    (cl-return path))))
   "The path to Mercurial's hg executable."
   :type '(file :must-match t)
   :group 'mercurial)
@@ -151,9 +130,7 @@ repository-related commands."
   :type 'string
   :group 'mercurial)
 
-
 ;;; Other variables.
-
 (defvar hg-mode nil
   "Is this file managed by Mercurial?")
 (make-variable-buffer-local 'hg-mode)
@@ -187,9 +164,8 @@ repository-related commands."
 (defvar hg-rev-history nil)
 (defvar hg-repo-completion-table nil)	; shut up warnings
 
-
-;;; Random constants.
 
+;;; Random constants.
 (defconst hg-commit-message-start
   "--- Enter your commit message.  Type `C-c C-c' to commit. ---\n")
 
@@ -204,12 +180,10 @@ repository-related commands."
     (?C . normal)
     (?I . ignored)
     (?? . nil)))
-
-;;; hg-mode keymap.
 
+;;; hg-mode keymap.
 (defvar hg-prefix-map
   (let ((map (make-sparse-keymap)))
-    (hg-feature-cond (xemacs (set-keymap-name map 'hg-prefix-map))) ; XEmacs
     (set-keymap-parent map vc-prefix-map)
     (define-key map "=" 'hg-diff)
     (define-key map "c" 'hg-undo)
@@ -230,9 +204,7 @@ repository-related commands."
 
 (add-minor-mode 'hg-mode 'hg-mode hg-mode-map)
 
-
 ;;; Global keymap.
-
 (defvar hg-global-map
   (let ((map (make-sparse-keymap)))
     (define-key map "," 'hg-incoming)
@@ -255,22 +227,16 @@ repository-related commands."
     map))
 
 (global-set-key hg-global-prefix hg-global-map)
-
-;;; View mode keymap.
 
+;;; View mode keymap.
 (defvar hg-view-mode-map
   (let ((map (make-sparse-keymap)))
-    (hg-feature-cond (xemacs (set-keymap-name map 'hg-view-mode-map))) ; XEmacs
-    (define-key map (hg-feature-cond (xemacs [button2])
-				     (t [mouse-2]))
-      'hg-buffer-mouse-clicked)
+    (define-key map [mouse-2] 'hg-buffer-mouse-clicked)
     map))
 
 (add-minor-mode 'hg-view-mode "" hg-view-mode-map)
 
-
 ;;; Commit mode keymaps.
-
 (defvar hg-commit-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map "\C-c\C-c" 'hg-commit-finish)
@@ -280,16 +246,12 @@ repository-related commands."
 
 (defvar hg-commit-mode-file-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (hg-feature-cond (xemacs [button2])
-				     (t [mouse-2]))
-      'hg-commit-mouse-clicked)
+    (define-key map [mouse-2] 'hg-commit-mouse-clicked)
     (define-key map " " 'hg-commit-toggle-file)
     (define-key map "\r" 'hg-commit-toggle-file)
     map))
 
-
 ;;; Convenience functions.
-
 (defsubst hg-binary ()
   (if hg-binary
       hg-binary
@@ -302,9 +264,7 @@ replacement.
 
 This function bridges yet another pointless impedance gap between
 XEmacs and GNU Emacs."
-  (hg-feature-cond
-   (xemacs (replace-in-string str regexp newtext literal))
-   (t (replace-regexp-in-string regexp newtext str nil literal))))
+  (replace-regexp-in-string regexp newtext str nil literal))
 
 (defsubst hg-strip (str)
   "Strip leading and trailing blank lines from a string."
@@ -378,13 +338,11 @@ all buffers visiting files in the repository."
 
 (defsubst hg-event-point (event)
   "Return the character position of the mouse event EVENT."
-  (hg-feature-cond (xemacs (event-point event))
-		   (t (posn-point (event-start event)))))
+  (posn-point (event-start event)))
 
 (defsubst hg-event-window (event)
   "Return the window over which mouse event EVENT occurred."
-  (hg-feature-cond (xemacs (event-window event))
-		   (t (posn-window (event-start event)))))
+  (posn-window (event-start event)))
 
 (defun hg-buffer-mouse-clicked (event)
   "Translate the mouse clicks in a HG log buffer to character events.
@@ -397,8 +355,7 @@ Handle frickin' frackin' gratuitous event-related incompatibilities."
 
 (defsubst hg-abbrev-file-name (file)
   "Portable wrapper around abbreviate-file-name."
-  (hg-feature-cond (xemacs (abbreviate-file-name file t))
-		   (t (abbreviate-file-name file))))
+  (abbreviate-file-name file))
 
 (defun hg-read-file-name (&optional prompt default)
   "Read a file or directory name, or a pattern, to use with a command."
@@ -416,9 +373,7 @@ Handle frickin' frackin' gratuitous event-related incompatibilities."
                         (and path (file-name-directory path))
                         nil nil
                         (and path (file-name-nondirectory path))
-                        (hg-feature-cond
-			 (xemacs (cons (quote 'hg-file-history) nil))
-			 (t nil)))))
+                        nil)))
         path))))
 
 (defun hg-read-number (&optional prompt default)
@@ -490,10 +445,7 @@ directory names from the file system.  We do not penalize URLs."
 	    (dolist (path (hg-config-section "paths" (hg-read-config)))
 	      (setq hg-repo-completion-table
 		    (cons (cons (car path) t) hg-repo-completion-table))
-	      (unless (hg-string-starts-with (hg-feature-cond
-					      (xemacs directory-sep-char)
-					      (t ?/))
-					     (cdr path))
+	      (unless (hg-string-starts-with ?/ (cdr path))
 		(setq hg-repo-completion-table
 		      (cons (cons (cdr path) t) hg-repo-completion-table))))
 	    (completing-read (format "Repository%s: " (or prompt ""))
@@ -583,14 +535,13 @@ current frame."
 (defun hg-view-mode (prev-buffer &optional file-name)
   (goto-char (point-min))
   (set-buffer-modified-p nil)
-  (toggle-read-only t)
-  (hg-feature-cond (xemacs (view-minor-mode prev-buffer 'hg-exit-view-mode))
-		   (t (view-mode-enter nil 'hg-exit-view-mode)))
-  (setq hg-view-mode t)
-  (setq truncate-lines t)
-  (when file-name
-    (setq hg-view-file-name
-	  (hg-abbrev-file-name file-name))))
+  (let ((buffer-read-only t))
+    (view-mode-enter nil 'hg-exit-view-mode)
+    (setq hg-view-mode t)
+    (setq truncate-lines t)
+    (when file-name
+      (setq hg-view-file-name
+	    (hg-abbrev-file-name file-name)))))
 
 (defun hg-file-status (file)
   "Return status of FILE, or nil if FILE does not exist or is unmanaged."
@@ -610,7 +561,7 @@ current frame."
 Each entry is a pair (FILE-NAME . STATUS)."
   (let ((s (apply 'hg-run "--cwd" root "status" "-marduc" paths))
 	result)
-    (dolist (entry (split-string (hg-chomp (cdr s)) "\n") (nreverse result))
+    (cl-dolist (entry (split-string (hg-chomp (cdr s)) "\n") (nreverse result))
       (let (state name)
 	(cond ((= (aref entry 1) ? )
 	       (setq state (assq (aref entry 0) hg-state-alist)
@@ -637,7 +588,7 @@ being viewed."
        (set-buffer view-buf-name)
        (save-excursion
 	 ,@body)
-       (case (count-lines (point-min) (point-max))
+       (cl-case (count-lines (point-min) (point-max))
 	 ((0)
 	  (kill-buffer view-buf-name)
 	  (message "(No output)"))
@@ -721,7 +672,7 @@ the file."
 	(hg-mode-line-internal status parents)
 	status))))
 
-(defun hg-mode (&optional toggle)
+(defun hg-mode ()
   "Minor mode for Mercurial distributed SCM integration.
 
 The Mercurial mode user interface is based on that of VC mode, so if
@@ -766,7 +717,7 @@ Push changes                          G    C-c h >      hg-push"
     (when (hg-mode-line)
       (hg-mode))))
 
-(add-hook 'find-file-hooks 'hg-find-file-hook)
+(add-hook 'find-file-hook 'hg-find-file-hook)
 
 (defun hg-after-save-hook ()
   (ignore-errors
@@ -1026,7 +977,7 @@ With a prefix argument, prompt for all of these."
         (call-process (hg-binary) nil t nil "diff" "-r" rev1 "-r" rev2 path)))
       (diff-mode)
       (setq diff (not (= (point-min) (point-max))))
-      (font-lock-fontify-buffer)
+      (font-lock-ensure)
       (cd (hg-root path)))
     diff))
 
@@ -1209,7 +1160,7 @@ When called interactively, the root is printed.  A prefix argument
 prompts for a path to check."
   (interactive (list (hg-read-file-name)))
   (if (or path (not hg-root))
-      (let ((root (do ((prev nil dir)
+      (let ((root (cl-do ((prev nil dir)
 		       (dir (file-name-directory
                              (or
                               path
@@ -1218,8 +1169,8 @@ prompts for a path to check."
 			    (file-name-directory (directory-file-name dir))))
 		      ((equal prev dir))
 		    (when (file-directory-p (concat dir ".hg"))
-		      (return dir)))))
-	(when (interactive-p)
+		      (cl-return dir)))))
+	(when (called-interactively-p 'interactive)
 	  (if root
 	      (message "The root of this repository is `%s'." root)
 	    (message "The path `%s' is not in a Mercurial repository."
@@ -1229,7 +1180,7 @@ prompts for a path to check."
 
 (defun hg-cwd (&optional path)
   "Return the current directory of PATH within the repository."
-  (do ((stack nil (cons (file-name-nondirectory
+  (cl-do ((stack nil (cons (file-name-nondirectory
 			 (directory-file-name dir))
 			stack))
        (prev nil dir)
@@ -1240,7 +1191,7 @@ prompts for a path to check."
     (when (file-directory-p (concat dir ".hg"))
       (let ((cwd (mapconcat 'identity stack "/")))
 	(unless (equal cwd "")
-	  (return (file-name-as-directory cwd)))))))
+	  (cl-return (file-name-as-directory cwd)))))))
 
 (defun hg-status (path)
   "Print revision control status of a file or directory.
@@ -1284,10 +1235,4 @@ If `F.~REV~' already exists, use it instead of checking it out again."
          (hg-run0 "-q" "cat" "-r" version "-o" manual-backup file)))
      (find-file-other-window manual-backup)))
 
-
 (provide 'mercurial)
-
-
-;;; Local Variables:
-;;; prompt-to-byte-compile: nil
-;;; end:
