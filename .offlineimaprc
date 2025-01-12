@@ -15,7 +15,7 @@ localfolders = ~/mail/ellis
 
 [Repository ellis-imap]
 type = Gmail
-remotepasseval = get_authinfo_password("imap.gmail.com", "ellis", 993)
+remotepasseval = get_authinfo_password("imap.gmail.com", "richard.westhaver", 993)
 remoteuser = richard.westhaver@gmail.com
 # Necessary to work around https://github.com/OfflineIMAP/offlineimap/issues/573 (versions 7.0.12, 7.2.1)
 # macos only
@@ -38,7 +38,7 @@ localfolders = ~/mail/demon
 
 [Repository demon-imap]
 type = Gmail
-remotepasseval = get_authinfo_password("imap.gmail.com", "demon", 993)
+remotepasseval = get_authinfo_password("imap.gmail.com", "throwoutxyz", 993)
 remoteuser = throwoutxyz@gmail.com
 # macos only
 #sslcacertfile = /opt/local/etc/openssl/cert.pem

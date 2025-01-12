@@ -5,6 +5,7 @@
 (require :sb-cltl2)
 (require :sb-rotate-byte)
 (require :sb-sprof)
+
 (setq *debug-beginner-help-p* nil
       ;; *print-case* :downcase
       *print-level* 32
@@ -30,3 +31,10 @@
                     "comp/scratch/")))
 
 ;; (require :sb-aclrepl)
+;; use the correct USER package for the current lisp core
+
+(case (sb-int:keywordicate 
+       (string-upcase (pathname-name sb-ext:*core-pathname*)))
+  (:sbcl nil)
+  (:core (use-package :user)
+  

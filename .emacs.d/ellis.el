@@ -850,5 +850,7 @@ With prefix ARG non-nil, insert the result at the end of region."
   (let ((eq-str (buffer-substring calc-embed-top calc-embed-bot)))
     (calc-eval eq-str 'push)))
 
+;; (add-hook 'skel-minor-mode-hook 'skel-dir-local-get-variables)
+
 (provide 'ellis)
 ;; ellis.el ends here

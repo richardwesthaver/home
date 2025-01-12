@@ -2,7 +2,9 @@
 :user ellis
 :packy "~/.stash/packy"
 :wm :stumpwm
+:term :alacritty
 :shell :bash
-:browser "eww"
+:browser :eww
 :editor :emacs
+:mail "~/mail"
 :src "~/.stash/home/"
