@@ -27,6 +27,8 @@
 (require 'sk)
 (require 'sxp)
 (require 'ulang)
+(require 'graph)
+(set-face-attribute 'default nil :height 172)
 
 (defalias 'make #'compile)
 
