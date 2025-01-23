@@ -11,7 +11,7 @@
       *print-length* 256)
 
 (defvar *quicklisp-setup* (or (probe-file #P"~/.stash/quicklisp/setup.lisp")
-                              (probe-file #P"/usr/local/share/lisp/quicklisp/setup.lisp")))
+                              (probe-file #P"/usr/share/quicklisp/setup.lisp")))
 
 #-quicklisp
 (when *quicklisp-setup*
@@ -25,5 +25,5 @@
 
 (mapc #'include-projects-from
       (mapcar (lambda (x) (merge-pathnames x (user-homedir-pathname)))
-              (list ".stash/lisp/" "/usr/local/share/lisp/")))
+              (list ".stash/lisp/" "/usr/share/lisp/" "/usr/src/")))
 ;; (require :sb-aclrepl)
