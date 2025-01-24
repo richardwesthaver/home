@@ -5,6 +5,7 @@
 (require :sb-cltl2)
 (require :sb-rotate-byte)
 (require :sb-sprof)
+(require :sb-grovel)
 (setq *debug-beginner-help-p* nil
       ;; *print-case* :downcase
       *print-level* 32
