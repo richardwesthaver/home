@@ -32,7 +32,7 @@
 
 (defalias 'make #'compile)
 
-(setq default-theme 'ef-dark
+(setq default-theme 'leuven-dark
       user-lab-directory (join-paths user-home-directory "lab")
       company-source-directory (join-paths user-home-directory "comp"))
 
