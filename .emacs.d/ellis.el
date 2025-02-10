@@ -241,7 +241,7 @@
 ;;; Diary
 (setq diary-list-include-blanks t)
 ;;; Org Config
-(setq publish-dir "/ssh:rurik:/srv/http/compiler.company")
+;; (setq publish-dir "/ssh:rurik:/srv/http/compiler.company")
 
 ;; populate org-babel
 (org-babel-do-load-languages
