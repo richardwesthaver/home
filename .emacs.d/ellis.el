@@ -623,8 +623,8 @@ EXT is a list of the extensions of files to be included."
                     (join-paths company-org-directory "blog*")
                     (join-paths company-org-directory "meta*"))
                org-agenda-extensions))
-           . (:maxlevel . 3))
-          (nil . (:level . 5)))))
+           . (:maxlevel . 8))
+          (nil . (:level . 8)))))
 
 (with-eval-after-load 'org
   (org-set-agenda-files)
