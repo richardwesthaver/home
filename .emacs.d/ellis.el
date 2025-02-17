@@ -217,9 +217,9 @@
 (use-package elfeed-tube
   :ensure t
   :after elfeed
-  :config
+  ;; :config
   ;; (elfeed-tube-setup)
-  (elfeed-tube-add-feeds '("detroit techno" "boiler room dj" "brad mehldau" "chris 'daddy' dave"))
+  ;; (elfeed-tube-add-feeds '("detroit techno" "boiler room dj" "brad mehldau" "chris 'daddy' dave"))
   :bind (:map elfeed-show-mode-map
               ("F" . elfeed-tube-fetch)
               ([remap save-buffer] . elfeed-tube-save)
@@ -617,14 +617,14 @@ EXT is a list of the extensions of files to be included."
              (lambda (x) (string= "readme.org" (file-name-nondirectory x)))
              (org-list-files
               (list company-org-directory org-directory
-                    (join-paths company-org-directory "notes*")
-                    (join-paths company-org-directory "plan*")
-                    (join-paths company-org-directory "docs*")
-                    (join-paths company-org-directory "blog*")
-                    (join-paths company-org-directory "meta*"))
+                    (join-paths company-org-directory "graph/**")
+                    (join-paths company-org-directory "plan/**")
+                    (join-paths company-org-directory "docs/**")
+                    (join-paths company-org-directory "blog/**")
+                    (join-paths company-org-directory "meta/**"))
                org-agenda-extensions))
            . (:maxlevel . 8))
-          (nil . (:level . 8)))))
+          (nil . (:level . 3)))))
 
 (with-eval-after-load 'org
   (org-set-agenda-files)
