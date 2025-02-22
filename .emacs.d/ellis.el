@@ -244,22 +244,8 @@
 ;; (setq publish-dir "/ssh:rurik:/srv/http/compiler.company")
 
 ;; populate org-babel
-(org-babel-do-load-languages
- ;; TODO 2021-10-24: bqn, apl, k
- 'org-babel-load-languages '((shell . t)
-			     (emacs-lisp . t)
-			     (lisp . t)
-			     (org . t)
-			     (eshell . t)
-                             (calc . t)
-			     (sed . t)
-			     (awk . t)
-			     (dot . t)
-			     (js . t)
-			     (C . t)
-			     (python . t)
-			     (lua . t)
-			     (lilypond . t)))
+;; TODO 2021-10-24: bqn, apl, k
+(org-babel-do-load-languages 'org-babel-load-languages '((lua . t) (lilypond . t)))
 
 ;; timeline
 (use-package org-timeline
