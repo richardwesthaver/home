@@ -24,7 +24,7 @@
 
 ;;; Code:
 (require 'inbox)
-(require 'sk)
+(require 'skel)
 (require 'sxp)
 (require 'ulang)
 (require 'graph)
