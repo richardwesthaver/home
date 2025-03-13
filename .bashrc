@@ -42,8 +42,13 @@ eww() {
  emacsclient -t -e "(eww-browse-url \"$1\")" -a=
 }
 
+dired() {
+ emacsclient -t -e "(dired \"$1\")" -a=
+}
+
 alias em='emacsclient -a='
 alias ec='emacsclient -c -a='
+alias d='dired'
 alias et='emacsclient -t -a='
 alias skm='skel make'
 alias hmi='homer install'

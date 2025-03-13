@@ -85,8 +85,8 @@
 
 (add-hook 'prog-mode-hook #'skel-minor-mode)
 (add-hook 'org-mode-hook #'skel-minor-mode)
-;; (add-hook 'prog-mode-hook #'company-mode)
-
+(add-hook 'conf-mode-hook #'skel-minor-mode)
+(add-hook 'dired-mode-hook #'skel-minor-mode)
 (add-hook 'notmuch-message-mode-hook #'turn-on-orgtbl)
 
 (use-package ef-themes :ensure t)
@@ -253,13 +253,14 @@
   :hook (org-agenda-finalize . org-timeline-insert-timeline)
   :init
   (setq
-   org-timeline-insert-before-text "›"
+   org-timeline-insert-before-text ""
    org-timeline-beginning-of-day-hour 8
-   org-timeline-default-duration 30
+   org-timeline-default-duration 60
    org-timeline-keep-elapsed 2
    org-timeline-start-hour 8
    org-timeline-show-text-in-blocks t
-   org-timeline-prepend nil))
+   org-timeline-prepend t
+   org-timeline-overlap-in-new-line t))
 
 ;;; IRC
 (setq erc-format-nick-function 'erc-format-@nick)
