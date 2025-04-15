@@ -9,4 +9,3 @@
 :log-level :info
 :stash ".stash"
 :cache ".cache"
-:registry "~/.data/skel/registry"
