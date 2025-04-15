@@ -6,5 +6,4 @@
 :log-level :debug
 :stash "/opt/stash"
 :cache "~/.cache/skel"
-:registry "/opt/stash/data/skel/registry"
-:scripts "/opt/stash/scripts"
+;; :scripts "/opt/stash/scripts"
