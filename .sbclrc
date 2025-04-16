@@ -32,6 +32,9 @@
                     "/usr/src/")))
 ;; (require :sb-aclrepl)
 
+(when (find-package :std)
+  (setq std:*user* (sb-posix:getenv "USER")))
+
 (cond 
   ((find-package :user) (in-package :user))
   ((find-package :std-user) (in-package :std-user)))
