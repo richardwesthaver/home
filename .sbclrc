@@ -7,13 +7,14 @@
 (require :sb-sprof)
 (require :sb-grovel)
 (require :sb-cover)
+
 (setq *debug-beginner-help-p* nil
       ;; *print-case* :downcase
       *print-level* 32
       *print-length* 256)
 
-(defvar *quicklisp-setup* (or (probe-file #P"~/.stash/quicklisp/setup.lisp")
-                              (probe-file #P"/usr/share/quicklisp/setup.lisp")))
+(defparameter *quicklisp-setup* (or (probe-file #P"~/.stash/quicklisp/setup.lisp")
+                                    (probe-file #P"/usr/share/quicklisp/setup.lisp")))
 
 #-quicklisp
 (when *quicklisp-setup*
@@ -21,7 +22,7 @@
 ;; (ql:quickload :clouseau)
 
 (defun include-projects-from (path)
-  "Add PATH to QL;*LOCAL-PROJECT-DIRECTORIES* and ASDF:*CENTRAL-REGISTRY*."
+  "Add PATH to QL:*LOCAL-PROJECT-DIRECTORIES* and ASDF:*CENTRAL-REGISTRY*."
   #+quicklisp (pushnew path ql:*local-project-directories*)
   (pushnew path asdf:*central-registry*))
 
