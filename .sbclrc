@@ -21,17 +21,8 @@
   (load *quicklisp-setup*))
 ;; (ql:quickload :clouseau)
 
-(defun include-projects-from (path)
-  "Add PATH to QL:*LOCAL-PROJECT-DIRECTORIES* and ASDF:*CENTRAL-REGISTRY*."
-  #+quicklisp (pushnew path ql:*local-project-directories*)
-  (pushnew path asdf:*central-registry*))
-
-(mapc #'include-projects-from
-      (mapcar (lambda (x) (merge-pathnames x (user-homedir-pathname)))
-              (list ".stash/lisp/" 
-                    "/usr/share/lisp/" 
-                    "/usr/src/")))
 ;; (require :sb-aclrepl)
+#+std (register-project-directory #P"~/.stash/lisp/")
 
 (cond 
   ((find-package :user) (in-package :user))
