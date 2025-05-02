@@ -841,5 +841,8 @@ With prefix ARG non-nil, insert the result at the end of region."
 
 ;; (add-hook 'skel-minor-mode-hook 'skel-dir-local-get-variables)
 
+(with-eval-after-load "mpc"
+  (setq mpc-song-viewer-tags (mpc-cmd-tagtypes)))
+
 (provide 'ellis)
 ;; ellis.el ends here

@@ -58,12 +58,13 @@
 (load-module "hostname")
 (load-module "mpd")
 (load-module "mem")
+(load-module "net")
 (load-module "command-history")
 ;; (ql:quickload '(:cl-diskspace :cl-mount-info))
 ;; (load-module "disk") ;; conflicts with io/disk
 (setq *mode-line-highlight-template* "<~A>")
 ;; TODO 2024-12-26: %D
-(setq *screen-mode-line-format* (list "[^B%n^b] %W^> %C | %M | %l | %h | %d"))
+(setq *screen-mode-line-format* (list "[^B%n^b] %W^> %C | %M %l %h %d"))
 
 (ql:quickload :xml-emitter)
 (ql:quickload :dbus)
@@ -110,7 +111,7 @@
 ;; (clear-window-placement-rules)
 
 ;; (setf *dynamic-group-master-split-ratio* 1/2)
-(define-frame-preference "scratch" (:float nil t))
+;; (define-frame-preference "scratch" (:float nil t))
 
 (defcommand term (&optional program) ()
   (sb-thread:make-thread
@@ -196,6 +197,7 @@
 (gnewbg "org")
 (gnewbg "web")
 (gnewbg "scratch")
-(run-shell-command "sh ~/.fehbg")
+
 (when (equal (machine-instance) "zor")
   (run-shell-command "sh ~/.screenlayout/default.sh"))
+(run-shell-command "sh ~/.fehbg")

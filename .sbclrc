@@ -5,8 +5,9 @@
 (require :sb-cltl2)
 (require :sb-rotate-byte)
 (require :sb-sprof)
-
-(setq *debug-beginner-help-p* nil
+(require :sb-cover)
+(require :sb-grovel)
+(setq cl-user::*debug-beginner-help-p* nil
       ;; *print-case* :downcase
       *print-level* 32
       *print-length* 256)
@@ -26,15 +27,12 @@
 
 (mapc #'include-projects-from
       (mapcar (lambda (x) (merge-pathnames x (user-homedir-pathname)))
-              (list "comp/core/lisp/"
+              (list "comp/core/"
                     "comp/demo/"
-                    "comp/scratch/")))
+                    ;; "comp/scratch/"
+                    ".stash/lisp/")))
 
 ;; (require :sb-aclrepl)
-;; use the correct USER package for the current lisp core
-
-(case (sb-int:keywordicate 
-       (string-upcase (pathname-name sb-ext:*core-pathname*)))
-  (:sbcl nil)
-  (:core (use-package :user)
-  
+(cond 
+  ((find-package :user) (in-package :user))
+  ((find-package :std-user) (in-package :std-user)))

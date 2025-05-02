@@ -8,3 +8,48 @@
 :editor :emacs
 :mail "~/mail"
 :src "~/.stash/home/"
+:tasks
+((:update-skel-projects () (init-skel)))
+:jobs
+((update ()
+  (let ((proc (cli/tools/mail:run-offlineimap)))
+   (with-emacs (e :wait nil)
+    (elfeed-update)
+    (package-upgrade-all))
+   (funcall #$rustup update$# :wait t)
+   (when proc
+    (sb-ext:process-wait proc))))
+ (upgrade (update) 
+  (funcall #$sudo -S pacman -Syu && paccache -r$# :input t :output t))
+ (env () #$ $#)
+ (scan-wifi () #$connmanctl scan wifi && connmanctl services$#)
+ (connect-wifi () (funcall #$connmanctl connect wifi$# :input t :output t))
+ (scan-bt () #$bluetoothctl scan on && bluetoothctl devices$#)
+ (bt () #$rfkill unblock bluetooth$#
+  #$bluetoothctl agent on$#
+  #$bluetoothctl connect 04:FE:A1:D4:9C:53$#)
+ (mnt () 
+  (funcall #$sudo -S mount /dev/sdd /opt/store$# :input t)
+  #$sudo mount /dev/sde /opt/stash$#
+  #$sudo mount /dev/sdc /opt/backup$#
+  #$sudo mount /dev/sdf /opt/scratch$#)
+ (snapshot ()
+  (funcall #$sudo -S btrfs sub snap -r / /.snapshots/#,(time:format-date-simple)$# :input t)
+  #$sudo btrfs sub snap -r /opt/stash /opt/stash/.snapshots/#,(time:format-date-simple)$#
+  #$sudo btrfs sub snap -r /opt/store /opt/store/.snapshots/#,(time:format-date-simple)$#
+  #$sudo btrfs sub snap -r /opt/scratch /opt/scratch/.snapshots/#,(time:format-date-simple)$#)
+ (backup ()
+  ;; (funcall #$sudo -S btrfs send -f "/opt/backup/root/#,(time:format-date-simple)" /.snapshots/#,(time:format-date-simple)$# :input t)
+  (funcall 
+   ;;#$doas btrfs send -f "/opt/backup/stash/#,(time:format-date-simple)" /opt/stash/.snapshots/#,(time:format-date-simple)$#
+   ;; #$doas btrfs send -f "/opt/backup/store/#,(time:format-date-simple)" /opt/store/.snapshots/#,(time:format-date-simple)$# :input t))
+   #$doas btrfs send -f "/opt/backup/scratch/#,(time:format-date-simple)" /opt/scratch/.snapshots/#,(time:format-date-simple)$# :input t))
+ (reboot () (funcall #$sudo -S reboot now$# :input t))
+ (startx (bt mnt) #$startx$#))
+:services
+((emacs (:engine :systemd))
+ (gnome-keyring-daemon (:engine :systemd))
+ (pipewire (:engine :systemd))
+ (podman (:engine :systemd))
+ (ssh-agent (:engine :systemd))
+ (mpd (:engine :systemd)))
