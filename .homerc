@@ -1,5 +1,6 @@
 ;;; -*- mode:skel; -*-
-:user dev
-;; :packy "~/.stash/packy"
+:user root
+:packy "/opt/packy"
+:logger (:level :debug)
 :shell :bash
-:src "~/.stash/home/"
+:src "/usr/src/home/"
