@@ -22,7 +22,7 @@
 ;; (ql:quickload :clouseau)
 
 ;; (require :sb-aclrepl)
-#+std (register-project-directory #P"~/.stash/lisp/")
+#+std (std:register-project-directory #P"~/.stash/lisp/")
 
 (cond 
   ((find-package :user) (in-package :user))
