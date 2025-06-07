@@ -15,6 +15,6 @@ robots=noindex, nofollow
 # if cgit messes up links, use a virtual-root. For example, cgit.example.org/ has this value:
 virtual-root=/
 
-scan-path=/home/vc/src/
+scan-path=/home/fedora/src/
 
 source-filter=/usr/lib/cgit/filters/syntax-highlighting.py

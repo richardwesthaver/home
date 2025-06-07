@@ -1,5 +1,5 @@
 ;;; -*- mode:skel; -*-
-:user vc
+:user fedora
 :packy "~/.stash/packy"
 :shell :bash
 :src "~/.stash/home/"

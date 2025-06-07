@@ -1,5 +1,5 @@
 ;;; .skelrc --- ellis@rurik  -*- mode: skel; -*-
-:user "vc"
+:user "fedora"
 :vc :hg
 :log-level :trace
 :stash "~/.stash"

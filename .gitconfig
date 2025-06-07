@@ -4,6 +4,6 @@
 [init]
 	defaultBranch = default
 [safe]
-        directory = /home/vc/src
+        directory = /home/fedora/src
 [credential]
 	helper = /usr/lib/git-core/git-credential-libsecret
