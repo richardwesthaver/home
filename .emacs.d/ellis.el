@@ -248,19 +248,19 @@
 (org-babel-do-load-languages 'org-babel-load-languages '((lua . t) (lilypond . t)))
 
 ;; timeline
-(use-package org-timeline
-  :load-path user-emacs-lib-directory
-  :hook (org-agenda-finalize . org-timeline-insert-timeline)
-  :init
-  (setq
-   org-timeline-insert-before-text ""
-   org-timeline-beginning-of-day-hour 8
-   org-timeline-default-duration 60
-   org-timeline-keep-elapsed 2
-   org-timeline-start-hour 8
-   org-timeline-show-text-in-blocks t
-   org-timeline-prepend t
-   org-timeline-overlap-in-new-line t))
+;; (use-package org-timeline
+;;   :load-path user-emacs-lib-directory
+;;   :hook (org-agenda-finalize . org-timeline-insert-timeline)
+;;   :init
+;;   (setq
+;;    org-timeline-insert-before-text ""
+;;    org-timeline-beginning-of-day-hour 8
+;;    org-timeline-default-duration 60
+;;    org-timeline-keep-elapsed 2
+;;    org-timeline-start-hour 8
+;;    org-timeline-show-text-in-blocks t
+;;    org-timeline-prepend t
+;;    org-timeline-overlap-in-new-line t))
 
 ;;; IRC
 (setq erc-format-nick-function 'erc-format-@nick)

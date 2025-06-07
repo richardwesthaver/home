@@ -5,6 +5,7 @@
 :term :alacritty
 :shell :bash
 :browser :eww
+:logger (:level :info)
 :editor :emacs
 :mail "~/mail"
 :src "~/.stash/home/"
@@ -25,7 +26,9 @@
  (scan-wifi () #$connmanctl scan wifi && connmanctl services$#)
  (connect-wifi () (funcall #$connmanctl connect wifi$# :input t :output t))
  (scan-bt () #$bluetoothctl scan on && bluetoothctl devices$#)
- (bt () #$rfkill unblock bluetooth$#
+ (bt () 
+  #$rfkill unblock bluetooth$#
+  #$bluetoothctl power on$#
   #$bluetoothctl agent on$#
   #$bluetoothctl connect 04:FE:A1:D4:9C:53$#)
  (mnt () 
@@ -52,4 +55,6 @@
  (pipewire (:engine :systemd))
  (podman (:engine :systemd))
  (ssh-agent (:engine :systemd))
- (mpd (:engine :systemd)))
+ (mpd (:engine :systemd))
+ ;; (bluetooth (:engine :systemd))
+ )

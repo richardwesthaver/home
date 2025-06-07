@@ -61,7 +61,12 @@
 (load-module "net")
 (load-module "command-history")
 ;; (ql:quickload '(:cl-diskspace :cl-mount-info))
-;; (load-module "disk") ;; conflicts with io/disk
+(ql:quickload :io)
+(ql:quickload :mcclim)
+(push :x11 *features*)
+(ql:quickload :gui)
+(load-module "disk")
+
 (setq *mode-line-highlight-template* "<~A>")
 ;; TODO 2024-12-26: %D
 (setq *screen-mode-line-format* (list "[^B%n^b] %W^> %C | %M %l %h %d"))
