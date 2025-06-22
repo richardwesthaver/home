@@ -8,7 +8,6 @@
 (require :sb-cover)
 (require :sb-grovel)
 (setq cl-user::*debug-beginner-help-p* nil
-      ;; *print-case* :downcase
       *print-level* 32
       *print-length* 256)
 
@@ -18,7 +17,6 @@
 #-quicklisp
 (when *quicklisp-setup*
   (load *quicklisp-setup*))
-;; (ql:quickload :clouseau)
 
 (defun include-projects-from (path)
   "Add PATH to QL;*LOCAL-PROJECT-DIRECTORIES* and ASDF:*CENTRAL-REGISTRY*."
@@ -28,11 +26,11 @@
 (mapc #'include-projects-from
       (mapcar (lambda (x) (merge-pathnames x (user-homedir-pathname)))
               (list "comp/core/"
+                    "comp/contrib/"
                     "comp/demo/"
                     ;; "comp/scratch/"
                     ".stash/lisp/")))
 
-;; (require :sb-aclrepl)
 (cond 
   ((find-package :user) (in-package :user))
   ((find-package :std-user) (in-package :std-user)))
