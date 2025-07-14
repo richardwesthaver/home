@@ -1,16 +1,14 @@
 (require :stumpwm)
 
 (in-package :stumpwm)
-
-(stumpwm:set-prefix-key (kbd "s-SPC"))
-
+(ql:quickload '(:std :swank))
+(set-prefix-key (kbd "s-SPC"))
 ;; prompt the user for an interactive command. The first arg is an
 ;; optional initial contents.
 (defcommand colon1 (&optional (initial "")) (:rest)
   (let ((cmd (read-one-line (current-screen) ": " :initial-input initial)))
     (when cmd
       (eval-command cmd t))))
-
 ;; load our packages
 ;; (ql:quickload '(:std :log :cli :dat :net :io)) ;; :swank
 ;; (shadowing-import '(message) :std)
@@ -20,21 +18,14 @@
   "Load a system with QL:QUICKLOAD"
   (ql:quickload system))
 
-(defcommand load-std () ()
-  (ql:quickload :std))
-
-(defcommand load-prelude () ()
-  (ql:quickload :prelude))
-
 (defcommand load-core () ()
   (ql:quickload :core))
 
 (defcommand load-user () ()
-  (ql:quickload :user)
-  (in-package :user))
+  (ql:quickload :core/user))
 
-(defcommand load-swank () ()
-  (ql:quickload :swank))
+(defcommand start-swank () ()
+  (swank:start-server (std:merge-homedir-pathnames ".stumpwm.d/stumpwm.swank")))
 
 (setq *mouse-focus-policy*    :click
       *float-window-modifier* :meta
@@ -44,8 +35,8 @@
 (init-load-path *module-dir*)
 
 (ql:quickload :clx-truetype)
-(load-module "ttf-fonts")
-(xft:cache-fonts)
+(load-module "swm/ttf-fonts")
+(ttf:cache-fonts)
 
 (set-font (make-instance 'xft:font
             :family "Mononoki Nerd Font Propo"
@@ -53,29 +44,15 @@
             :size 18))
 
 ;; (load-module "swm-golden-ratio")
-(load-module "screenshot")
-(load-module "cpu")
-(load-module "hostname")
-(load-module "mpd")
-(load-module "mem")
-(load-module "net")
-(load-module "command-history")
-;; (ql:quickload '(:cl-diskspace :cl-mount-info))
-(ql:quickload :io)
-(ql:quickload :mcclim)
-(push :x11 *features*)
-(ql:quickload :gui)
-(load-module "disk")
-
+(load-module "swm/screenshot")
+(load-module "swm/modeline")
+(load-module "swm/command-history")
+;; (load-module "disk") ;; conflicts with io/disk
 (setq *mode-line-highlight-template* "<~A>")
 ;; TODO 2024-12-26: %D
-(setq *screen-mode-line-format* (list "[^B%n^b] %W^> %C | %M %l %h %d"))
+(setq *screen-mode-line-format* (list "[^B%n^b] %W^> %C | %D %M %l %h %d"))
 
-(ql:quickload :xml-emitter)
-(ql:quickload :dbus)
-
-(load-module "clipboard-history")
-
+(load-module "swm/clipboard-history")
 (define-key *root-map* (kbd "C-y") "show-clipboard-history")
 ;; start the polling timer process
 (clipboard-history:start-clipboard-manager)
@@ -92,7 +69,7 @@
 (setq *mode-line-background-color* "#161613")
 (setq *mode-line-foreground-color* "#FFFFFF")
 (setq *mode-line-border-color* "#28394c")
-(setq *mode-line-position* :bottom)
+(setq *mode-line-position* :top)
 
 (setq *colors* (list "#010101"      ; 0 black
                      "#BF616A"      ; 1 red
@@ -206,3 +183,8 @@
 (when (equal (machine-instance) "zor")
   (run-shell-command "sh ~/.screenlayout/default.sh"))
 (run-shell-command "sh ~/.fehbg")
+
+(let ((swank-file (std:merge-homedir-pathnames ".stumpwm.d/stumpwm.swank")))
+  (when (probe-file swank-file) (delete-file swank-file))
+  (std:with-thread ()
+    (swank:start-server swank-file)))

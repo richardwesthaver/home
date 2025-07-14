@@ -13,15 +13,16 @@
 ((:update-skel-projects () (init-skel)))
 :jobs
 ((update ()
-  (cli/tools/mail:run-offlineimap)
+  (tools:run-offlineimap)
   (with-emacs (e :wait nil)
    (elfeed-update)
    (package-upgrade-all))
-  #$rustup update$#)
+  #$rustup update$#
+  (vc:update-repos ".stash/lisp" :type :git))
  (upgrade (update) 
-  (cargo-install "alacritty" :force t)
-  (cargo-install "bottom" :force t)
-  (funcall #0$sudo -S pacman -Syu && paccache -r$# :input ))
+  (tools:cargo-install "alacritty" :force t)
+  ;; (tools:cargo-install "bottom" :force t) ; ratatui bug
+  (with-sudo "pacman -Sy" "paccache -r"))
  (scan-wifi () #$connmanctl scan wifi && connmanctl services$#)
  (connect-wifi () (funcall #0$connmanctl connect wifi$# :input t))
  (scan-bt () #$bluetoothctl scan on && sleep 1 && bluetoothctl devices$#)
